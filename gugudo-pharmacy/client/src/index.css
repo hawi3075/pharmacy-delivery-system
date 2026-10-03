@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -23,6 +24,29 @@
 .dark .mesh-bg { background: radial-gradient(circle at 82% 12%, rgba(14,111,126,.18), transparent 28%), #17201e; }
 
 .hero-grid { min-height: 560px; }
-.ticker-track { animation: ticker 28s linear infinite; }
+
+/* Marquee */
+.ticker-track { animation: ticker 32s linear infinite; }
 @keyframes ticker { from { transform: translateX(0); } to { transform: translateX(-50%); } }
-@media (prefers-reduced-motion: reduce) { .ticker-track { animation: none; } }
+
+/* Scroll reveal */
+.reveal { opacity: 0; transform: translateY(18px); transition: opacity .7s ease, transform .7s cubic-bezier(.2,.7,.2,1); }
+.reveal.is-in { opacity: 1; transform: none; }
+
+/* Hero entrance */
+.hero-in { opacity: 0; animation: heroIn .8s cubic-bezier(.2,.7,.2,1) forwards; }
+@keyframes heroIn { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: none; } }
+
+/* Floating badges and background shapes */
+.float { animation: float 6s ease-in-out infinite; }
+@keyframes float { 50% { transform: translateY(-10px); } }
+.blob { position: absolute; border-radius: 9999px; filter: blur(60px); opacity: .55; animation: drift 14s ease-in-out infinite alternate; pointer-events: none; }
+@keyframes drift { to { transform: translate(30px, -20px) scale(1.1); } }
+
+.no-scrollbar { scrollbar-width: none; }
+.no-scrollbar::-webkit-scrollbar { display: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .ticker-track, .float, .blob { animation: none; }
+  .reveal, .hero-in { opacity: 1; transform: none; animation: none; transition: none; }
+}

@@ -1,22 +1,124 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { api } from '../api';
 import { useApp } from '../store';
-import ProductCard from '../components/ProductCard';
+import { ProductImg } from '../components/ProductCard';
+import { money } from '../components/ui';
 
 const heroImage = 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=1200&q=85';
-const categoryImages = [
-  'https://images.unsplash.com/photo-1556228578-8c89e6adf883?auto=format&fit=crop&w=600&q=80',
+const catImages = [
+  'https://images.unsplash.com/photo-1556228578-8c89e6adf883?auto=format&fit=crop&w=900&q=80',
   'https://images.unsplash.com/photo-1607619056574-7b8d3ee536b2?auto=format&fit=crop&w=600&q=80',
   'https://images.unsplash.com/photo-1608248543803-ba4f8c70ae0b?auto=format&fit=crop&w=600&q=80',
   'https://images.unsplash.com/photo-1583947215259-38e31be8751f?auto=format&fit=crop&w=600&q=80',
 ];
 
+/* PLACEHOLDER rating (4.3 to 4.9, stable per product) until real reviews exist.
+   When the API returns p.rating, this uses it automatically. */
+const getRating = (p) => p.rating ?? Math.round((4.3 + ((p.id * 37) % 7) / 10) * 10) / 10;
+
+function Stars({ value, size = 'text-sm' }) {
+  return (
+    <span className={`inline-flex items-center gap-1.5 ${size}`} role="img" aria-label={`Rated ${value} out of 5`}>
+      <span className="relative inline-block leading-none tracking-tight text-slate-300" aria-hidden>
+        ★★★★★
+        <span className="absolute left-0 top-0 overflow-hidden whitespace-nowrap text-amber-400" style={{ width: `${(value / 5) * 100}%` }}>★★★★★</span>
+      </span>
+      <b className="text-xs text-slate-600 dark:text-slate-300">{value.toFixed(1)}</b>
+    </span>
+  );
+}
+
+function ShopCard({ p }) {
+  const { t, addToCart } = useApp();
+  const out = p.stock === 0;
+  return (
+    <div className="group card flex h-full flex-col overflow-hidden p-3 transition duration-300 hover:-translate-y-1 hover:shadow-[0_18px_40px_rgba(14,111,126,0.18)]">
+      <Link to={`/product/${p.id}`} className="relative block overflow-hidden rounded-xl">
+        <div className="transition duration-500 group-hover:scale-105"><ProductImg p={p} className="h-44" /></div>
+        {p.requiresRx && <span className="absolute left-2 top-2 rounded-full bg-rose-600 px-2.5 py-1 text-[11px] font-bold text-white">Rx</span>}
+        {out && <span className="absolute inset-0 grid place-items-center bg-white/70 text-sm font-bold text-slate-800">{t('outOfStock')}</span>}
+      </Link>
+      <div className="mt-3 flex-1">
+        <p className="text-xs font-semibold text-brand">{p.category?.name}</p>
+        <Link to={`/product/${p.id}`} className="mt-0.5 block font-bold leading-snug hover:text-brand">{p.name}</Link>
+        <div className="mt-1.5"><Stars value={getRating(p)} /></div>
+      </div>
+      <div className="mt-3 flex items-center justify-between">
+        <b className="text-lg">{money(p.price)}</b>
+        <button className="btn !px-4 !py-2" disabled={out} onClick={() => addToCart(p)} aria-label={`${t('addToCart')}: ${p.name}`}>+ {t('add')}</button>
+      </div>
+    </div>
+  );
+}
+
+function useInView() {
+  const ref = useRef(null);
+  const [seen, setSeen] = useState(false);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    if (!('IntersectionObserver' in window)) return setSeen(true);
+    const io = new IntersectionObserver(([e]) => { if (e.isIntersecting) { setSeen(true); io.disconnect(); } }, { threshold: 0.12 });
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+  return [ref, seen];
+}
+
+function Reveal({ children, delay = 0, className = '' }) {
+  const [ref, seen] = useInView();
+  return <div ref={ref} style={{ transitionDelay: `${delay}ms` }} className={`reveal ${seen ? 'is-in' : ''} ${className}`}>{children}</div>;
+}
+
+function CountUp({ to, suffix = '', decimals = 0 }) {
+  const [ref, seen] = useInView();
+  const [v, setV] = useState(0);
+  useEffect(() => {
+    if (!seen) return;
+    let raf, t0;
+    const step = (t) => { t0 ??= t; const p = Math.min((t - t0) / 1400, 1); setV(to * (1 - Math.pow(1 - p, 3))); if (p < 1) raf = requestAnimationFrame(step); };
+    raf = requestAnimationFrame(step);
+    return () => cancelAnimationFrame(raf);
+  }, [seen, to]);
+  return <span ref={ref}>{v.toFixed(decimals)}{suffix}</span>;
+}
+
 function SectionTitle({ eyebrow, title, link = '/catalog' }) {
   return (
     <div className="mb-6 flex items-end justify-between gap-4">
-      <div><p className="text-xs font-extrabold uppercase tracking-[0.2em] text-brand">{eyebrow}</p><h2 className="mt-1 text-3xl md:text-4xl">{title}</h2></div>
-      <Link to={link} className="shrink-0 text-sm font-bold text-brand hover:text-brand-dark">View all <span aria-hidden>→</span></Link>
+      <div><p className="text-sm font-bold text-brand">{eyebrow}</p><h2 className="mt-1 text-3xl md:text-4xl">{title}</h2></div>
+      <Link to={link} className="shrink-0 text-sm font-bold text-brand hover:text-brand-dark">View all →</Link>
+    </div>
+  );
+}
+
+function CatTile({ c, i, big }) {
+  return (
+    <Link to={`/catalog?category=${c.id}`} className={`group relative overflow-hidden rounded-3xl ${big ? 'col-span-2 row-span-2 min-h-[20rem]' : 'min-h-[10rem]'}`}>
+      <img src={catImages[i % catImages.length]} alt="" loading="lazy" className="absolute inset-0 h-full w-full object-cover transition duration-700 group-hover:scale-110" />
+      <div className="absolute inset-0 bg-gradient-to-t from-[#102f2c]/90 via-[#102f2c]/25 to-transparent" />
+      <div className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-2 p-5 text-white">
+        <h3 className={big ? 'text-3xl' : 'text-xl'}>{c.name}</h3>
+        <span aria-hidden className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-white/20 backdrop-blur transition group-hover:bg-white group-hover:text-brand">↗</span>
+      </div>
+    </Link>
+  );
+}
+
+function Carousel({ items }) {
+  const ref = useRef(null);
+  const go = (d) => ref.current?.scrollBy({ left: d * 280, behavior: 'smooth' });
+  const arrow = 'grid h-10 w-10 place-items-center rounded-full border border-[#d6d9d2] bg-white text-lg transition hover:border-brand hover:text-brand dark:bg-slate-800';
+  return (
+    <div>
+      <div ref={ref} className="no-scrollbar -mx-2 flex snap-x snap-mandatory gap-4 overflow-x-auto px-2 py-3">
+        {items.map((p) => <div key={p.id} className="w-[15rem] shrink-0 snap-start"><ShopCard p={p} /></div>)}
+      </div>
+      <div className="mt-2 flex justify-end gap-2">
+        <button className={arrow} onClick={() => go(-1)} aria-label="Previous">‹</button>
+        <button className={arrow} onClick={() => go(1)} aria-label="Next">›</button>
+      </div>
     </div>
   );
 }
@@ -29,67 +131,141 @@ export default function Home() {
   const [q, setQ] = useState('');
 
   useEffect(() => {
-    api('/products').then((p) => setProducts(p)).catch(() => {});
+    api('/products').then(setProducts).catch(() => {});
     api('/categories').then(setCats).catch(() => {});
   }, []);
 
-  const categoryNames = ['Vitamins & Supplements', 'Personal Care', 'Pain Relief', 'First Aid'];
-  const visibleCategories = cats.length ? cats.slice(0, 4) : categoryNames.map((name, id) => ({ id, name }));
-  const productRows = [products.slice(0, 4), products.slice(4, 8), products.slice(0, 4), products.slice(4, 8)];
+  const shown = cats.slice(0, 5);
+  const trending = [...products].sort((a, b) => getRating(b) - getRating(a));
+  const newest = [...products].sort((a, b) => b.id - a.id).slice(0, 4);
+  const hi = (ms) => ({ animationDelay: `${ms}ms` });
+  const marquee = ['Licensed pharmacists', 'Cold-chain delivery', 'Pay on arrival', 'Prescription checked', 'Secure checkout'];
 
   return (
-    <div className="space-y-16 pb-0">
-      <section className="hero-grid relative overflow-hidden rounded-[2rem] bg-[#e6f6f8] px-7 py-12 md:px-14 md:py-16">
+    <div className="space-y-20">
+      {/* Hero */}
+      <section className="hero-grid relative overflow-hidden rounded-[2rem] bg-[#e6f6f8] px-7 py-12 dark:bg-slate-800 md:px-14 md:py-16">
+        <span className="blob -left-10 top-10 h-64 w-64 bg-[#0e6f7e]/30" />
+        <span className="blob -bottom-16 right-1/3 h-72 w-72 bg-[#7fd6c2]/40" style={{ animationDelay: '-7s' }} />
         <div className="relative z-10 max-w-xl">
-          <p className="mb-4 text-xs font-extrabold uppercase tracking-[0.25em] text-brand">Your health, thoughtfully delivered</p>
-          <h1 className="text-5xl leading-[1.02] text-[#173f3b] md:text-7xl">{t('welcomeTitle')}</h1>
-          <p className="mt-5 max-w-lg text-base leading-7 text-[#52625b]">{t('welcomeSub')} Browse everyday essentials and pharmacist-approved care from one calm, trusted place.</p>
-          <form className="mt-8 flex max-w-xl gap-2 rounded-2xl bg-white p-2 shadow-xl" onSubmit={(e) => { e.preventDefault(); nav('/catalog?q=' + encodeURIComponent(q)); }}>
-            <input className="input border-0 shadow-none" placeholder="What are you looking for?" value={q} onChange={(e) => setQ(e.target.value)} />
-            <button className="btn shrink-0">Search</button>
+          <p className="hero-in mb-4 text-sm font-bold text-brand" style={hi(0)}>Your health, thoughtfully delivered</p>
+          <h1 className="hero-in text-5xl leading-[1.04] text-[#173f3b] dark:text-white md:text-7xl" style={hi(100)}>{t('welcomeTitle')}</h1>
+          <p className="hero-in mt-5 max-w-lg text-base leading-7 text-[#52625b] dark:text-slate-300" style={hi(220)}>{t('welcomeSub')}</p>
+          <form className="hero-in mt-8 flex max-w-xl gap-2 rounded-full bg-white p-2 shadow-xl dark:bg-slate-900" style={hi(340)} onSubmit={(e) => { e.preventDefault(); nav('/catalog?q=' + encodeURIComponent(q)); }}>
+            <input className="input !rounded-full border-0 shadow-none" placeholder={t('search')} value={q} onChange={(e) => setQ(e.target.value)} aria-label={t('search')} />
+            <button className="btn shrink-0">{t('search')}</button>
           </form>
-          <div className="mt-5 flex flex-wrap gap-2">
-            {visibleCategories.map((c) => <Link key={c.id} to={`/catalog?category=${c.id}`} className="rounded-full border border-[#207065]/20 bg-white/70 px-4 py-2 text-sm font-bold text-[#207065]">{c.name}</Link>)}
+          <div className="hero-in mt-5 flex flex-wrap gap-2" style={hi(460)}>
+            {cats.slice(0, 4).map((c) => <Link key={c.id} to={`/catalog?category=${c.id}`} className="rounded-full border border-brand/20 bg-white/70 px-4 py-2 text-sm font-bold text-[#207065] transition hover:bg-white dark:bg-slate-900/60">{c.name}</Link>)}
           </div>
         </div>
-        <div className="hero-image relative mt-8 md:absolute md:right-8 md:top-8 md:mt-0 md:w-[43%]">
-          <img src={heroImage} alt="Pharmacist arranging trusted medicines" className="h-72 w-full rounded-[1.5rem] object-cover shadow-2xl md:h-[27rem]" />
-          <div className="absolute -bottom-5 -left-5 rounded-2xl bg-white p-4 shadow-xl"><p className="text-2xl font-black text-brand">4.9/5</p><p className="text-xs font-bold text-slate-500">from happy customers</p></div>
+        <div className="hero-in relative mt-10 md:absolute md:right-8 md:top-8 md:mt-0 md:w-[43%]" style={hi(250)}>
+          <img src={heroImage} alt="Pharmacist arranging trusted medicines" className="h-72 w-full rounded-[1.75rem] object-cover shadow-2xl md:h-[27rem]" />
+          <div className="float absolute -bottom-5 -left-4 rounded-2xl bg-white p-4 shadow-xl dark:bg-slate-900">
+            <Stars value={4.9} size="text-base" /><p className="mt-1 text-xs font-bold text-slate-500">Loved by customers</p>
+          </div>
+          <div className="float absolute -right-3 top-6 hidden rounded-2xl bg-white px-4 py-3 shadow-xl dark:bg-slate-900 md:block" style={{ animationDelay: '-3s' }}>
+            <p className="text-sm font-extrabold text-brand">Fast delivery</p><p className="text-xs text-slate-500">Cold-chain safe</p>
+          </div>
         </div>
       </section>
 
-      <section className="grid gap-4 md:grid-cols-3">
-        {[['◷', '24 hour service', 'Support whenever you need it'], ['✦', 'Easy categories', 'Find care in just a few taps'], ['✓', '100% secure checkout', 'Your privacy is always protected']].map(([icon, title, text], i) => (
-          <div key={title} className={`feature-card card flex items-start gap-4 p-5 ${i === 0 ? 'border-0 bg-[#207065] text-white' : ''}`}>
-            <span className={`grid h-11 w-11 shrink-0 place-items-center rounded-xl text-xl ${i === 0 ? 'bg-white/15' : 'bg-brand-light text-brand'}`}>{icon}</span>
-            <div><h3 className="text-xl">{title}</h3><p className={`mt-1 text-sm ${i === 0 ? 'text-white/70' : 'text-slate-500'}`}>{text}</p></div>
-          </div>
-        ))}
-      </section>
+      {/* Trust bar */}
+      <Reveal>
+        <div className="card grid divide-y divide-[#e5e4dc] dark:divide-slate-700 md:grid-cols-3 md:divide-x md:divide-y-0">
+          {[['◷', 'Always here to help', 'Message our pharmacists any time'], ['✦', 'Find care in a few taps', 'Clear categories, simple search'], ['✓', 'Secure checkout', 'Your privacy is always protected']].map(([icon, title, text]) => (
+            <div key={title} className="flex items-center gap-4 p-5">
+              <span className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-brand-light text-lg text-brand dark:bg-slate-700">{icon}</span>
+              <div><h3 className="text-lg">{title}</h3><p className="text-sm text-slate-500">{text}</p></div>
+            </div>
+          ))}
+        </div>
+      </Reveal>
 
-      <div className="ticker overflow-hidden rounded-xl bg-[#173f3b] py-3 text-white">
-        <div className="ticker-track flex w-max gap-12 text-xs font-extrabold uppercase tracking-[0.2em]"><span>Security first</span><span>Pharmacist approved</span><span>Quality care</span><span>Fast delivery</span><span>Security first</span><span>Pharmacist approved</span><span>Quality care</span><span>Fast delivery</span></div>
+      {/* Categories: one large tile leads, the rest follow */}
+      {shown.length > 0 && (
+        <Reveal><section>
+          <SectionTitle eyebrow="Explore care" title="Shop by category" />
+          <div className="grid grid-cols-2 gap-4 md:grid-cols-4 md:grid-rows-2">
+            {shown.map((c, i) => <CatTile key={c.id} c={c} i={i} big={i === 0} />)}
+          </div>
+        </section></Reveal>
+      )}
+
+      {/* Trending carousel */}
+      {products.length > 0 && (
+        <Reveal><section>
+          <SectionTitle eyebrow="Popular today" title="Trending products" />
+          <Carousel items={trending} />
+        </section></Reveal>
+      )}
+
+      {/* Promo band */}
+      <Reveal>
+        <section className="relative overflow-hidden rounded-[2rem] bg-[#173f3b] px-7 py-10 text-white md:px-14 md:py-12">
+          <span className="blob -right-10 -top-10 h-60 w-60 bg-[#0e6f7e]" />
+          <div className="relative flex flex-wrap items-center justify-between gap-6">
+            <div>
+              <h2 className="max-w-xl text-3xl md:text-4xl">Free delivery on orders over ETB 1,000</h2>
+              <p className="mt-2 text-white/70">Pay in cash when your medicines arrive.</p>
+            </div>
+            <Link to="/catalog" className="btn !bg-white !px-7 !py-3 !text-[#173f3b] hover:!bg-[#e6f6f8]">Start shopping</Link>
+          </div>
+        </section>
+      </Reveal>
+
+      {/* New arrivals */}
+      {newest.length > 0 && (
+        <section>
+          <Reveal><SectionTitle eyebrow="Just arrived" title="New arrivals" /></Reveal>
+          <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
+            {newest.map((p, i) => <Reveal key={p.id} delay={i * 90}><ShopCard p={p} /></Reveal>)}
+          </div>
+        </section>
+      )}
+
+      {/* Marquee */}
+      <div className="overflow-hidden rounded-full bg-[#e6f6f8] py-4 text-[#173f3b] dark:bg-slate-800 dark:text-white" aria-hidden>
+        <div className="ticker-track flex w-max gap-10 text-sm font-bold">
+          {[...marquee, ...marquee, ...marquee, ...marquee].map((m, i) => <span key={i} className="flex items-center gap-10">{m}<span className="text-amber-400">★</span></span>)}
+        </div>
       </div>
 
-      <section className="grid grid-cols-2 gap-3 md:grid-cols-4">
-        {[['All sales', 'Fresh offers every week', 'bg-[#fcefe5]'], ['Wish lists', 'Save care for later', 'bg-[#e7f3ed]'], ['New arrivals', 'Discover what is new', 'bg-[#e8eff8]'], ['Pharmacist picks', 'Trusted recommendations', 'bg-[#f5edda]']].map(([title, text, color]) => (
-          <Link to="/catalog" key={title} className={`rounded-2xl p-5 transition hover:-translate-y-1 hover:shadow-lg ${color}`}><span className="text-2xl text-[#173f3b]">↗</span><h3 className="mt-5 text-xl">{title}</h3><p className="mt-1 text-xs text-slate-600">{text}</p></Link>
-        ))}
-      </section>
+      {/* How it works */}
+      <Reveal>
+        <section>
+          <SectionTitle eyebrow="Simple by design" title="How it works" />
+          <div className="relative grid gap-10 md:grid-cols-3">
+            <div className="absolute left-[16%] right-[16%] top-6 hidden border-t-2 border-dashed border-brand/30 md:block" />
+            {[['1', 'Find what you need', 'Browse trusted products or search by name.'], ['2', 'Order with confidence', 'Upload a prescription if needed and check out.'], ['3', 'Care arrives at your door', 'Track your order and pay when it arrives.']].map(([n, title, text]) => (
+              <div key={n} className="relative text-center">
+                <span className="relative mx-auto grid h-12 w-12 place-items-center rounded-full bg-brand text-lg font-bold text-white shadow-lg">{n}</span>
+                <h3 className="mt-4 text-2xl">{title}</h3>
+                <p className="mx-auto mt-2 max-w-xs text-sm leading-6 text-slate-600 dark:text-slate-300">{text}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+      </Reveal>
 
-      <section><SectionTitle eyebrow="Explore care" title="Shop by category" /><div className="grid grid-cols-2 gap-4 md:grid-cols-4">{visibleCategories.map((c, i) => <Link to={`/catalog?category=${c.id}`} key={c.id} className="category-card group relative overflow-hidden rounded-2xl"><img src={categoryImages[i]} alt="" className="h-44 w-full object-cover transition duration-500 group-hover:scale-105" /><div className="absolute inset-0 bg-gradient-to-t from-[#173f3b]/85 to-transparent" /><h3 className="absolute bottom-4 left-4 text-xl text-white">{c.name}</h3></Link>)}</div></section>
+      {/* Numbers (replace with your real figures) */}
+      <Reveal>
+        <section className="grid gap-px overflow-hidden rounded-[2rem] bg-[#207065] text-white md:grid-cols-4">
+          {[[4.9, '/5', 1, 'Average rating'], [12, 'k+', 0, 'Happy customers'], [98, '%', 0, 'On-time delivery'], [24, '/7', 0, 'Care support']].map(([to, suffix, d, label]) => (
+            <div key={label} className="px-6 py-10 text-center">
+              <p className="text-5xl" style={{ fontFamily: "'DM Serif Display', serif" }}><CountUp to={to} suffix={suffix} decimals={d} /></p>
+              <p className="mt-2 text-sm font-bold text-white/70">{label}</p>
+            </div>
+          ))}
+        </section>
+      </Reveal>
 
-      {products.length > 0 && <><section><SectionTitle eyebrow="Popular today" title="Trending products" /><div className="grid grid-cols-2 gap-4 md:grid-cols-4">{productRows[0].map((p) => <ProductCard key={p.id} p={p} />)}</div></section>
-        <section><SectionTitle eyebrow="Just arrived" title="New arrivals" /><div className="grid grid-cols-2 gap-4 md:grid-cols-4">{productRows[1].map((p) => <ProductCard key={p.id} p={p} />)}</div></section>
-        <section><SectionTitle eyebrow="Loved by customers" title="Top rated" /><div className="grid grid-cols-2 gap-4 md:grid-cols-4">{productRows[2].map((p) => <ProductCard key={p.id} p={p} />)}</div></section></>}
-
-      <section className="rounded-[2rem] bg-[#f1eee5] px-7 py-12 md:px-14"><SectionTitle eyebrow="Simple by design" title="How it works" /><div className="grid gap-8 md:grid-cols-3">{[['01', 'Find what you need', 'Browse trusted products and clear pharmacist guidance.'], ['02', 'Order with confidence', 'Add to cart and checkout securely in a few clicks.'], ['03', 'Care arrives at your door', 'Track your order and pay when it arrives.']].map(([num, title, text]) => <div key={num} className="flex gap-4"><b className="text-4xl text-brand/40">{num}</b><div><h3 className="text-2xl">{title}</h3><p className="mt-2 text-sm leading-6 text-slate-600">{text}</p></div></div>)}</div></section>
-
-      <section><div className="mb-7 max-w-2xl"><p className="text-xs font-extrabold uppercase tracking-[0.2em] text-brand">The Doka difference</p><h2 className="mt-1 text-3xl md:text-4xl">Why we choose care over clutter</h2></div><div className="grid gap-4 md:grid-cols-4">{[['4.9/5', 'Average rating'], ['12k+', 'Happy customers'], ['98%', 'On-time delivery'], ['24/7', 'Care support']].map(([value, label]) => <div key={label} className="rounded-2xl border border-[#e5e4dc] p-6"><p className="text-3xl font-black text-brand">{value}</p><p className="mt-2 text-sm font-bold text-slate-500">{label}</p></div>)}</div></section>
-
-      <section className="rounded-[2rem] bg-[#207065] px-7 py-12 text-white md:px-14"><div className="max-w-2xl"><p className="text-xs font-extrabold uppercase tracking-[0.2em] text-white/60">Built on trust</p><h2 className="mt-2 text-4xl">Why professionals trust Doka Mart</h2><p className="mt-4 leading-7 text-white/75">From carefully selected products to dependable delivery, every part of Doka Mart is designed with the same attention to detail that healthcare professionals bring to your care.</p><div className="mt-7 flex flex-wrap gap-3"><span className="rounded-full bg-white/10 px-4 py-2 text-sm font-bold">Licensed pharmacists</span><span className="rounded-full bg-white/10 px-4 py-2 text-sm font-bold">Quality checked</span><span className="rounded-full bg-white/10 px-4 py-2 text-sm font-bold">Doorstep care</span></div></div></section>
-
-      <footer className="grid gap-8 border-t border-[#e5e4dc] py-10 md:grid-cols-4"><div><Link to="/" className="text-2xl font-bold text-[#207065]">Doka Mart</Link><p className="mt-3 text-sm leading-6 text-slate-500">Thoughtful health essentials, delivered with care.</p></div><div><h3 className="text-lg">Shop</h3><div className="mt-3 grid gap-2 text-sm text-slate-500"><Link to="/catalog">All products</Link><Link to="/catalog">New arrivals</Link><Link to="/catalog">Best sellers</Link></div></div><div><h3 className="text-lg">Help</h3><div className="mt-3 grid gap-2 text-sm text-slate-500"><Link to="/contact">Contact us</Link><Link to="/about">About Doka Mart</Link><Link to="/support">Delivery & returns</Link></div></div><div><h3 className="text-lg">Your health, our care</h3><p className="mt-3 text-sm leading-6 text-slate-500">Secure checkout and friendly support whenever you need it.</p></div></footer>
+      <footer className="grid gap-8 border-t border-[#e5e4dc] py-10 dark:border-slate-700 md:grid-cols-4">
+        <div><Link to="/" className="text-2xl font-bold text-[#207065]" style={{ fontFamily: "'DM Serif Display', serif" }}>Gugudo</Link><p className="mt-3 text-sm leading-6 text-slate-500">Thoughtful health essentials, delivered with care.</p></div>
+        <div><h3 className="text-lg">Shop</h3><div className="mt-3 grid gap-2 text-sm text-slate-500"><Link to="/catalog">All products</Link><Link to="/orders">My orders</Link></div></div>
+        <div><h3 className="text-lg">Help</h3><div className="mt-3 grid gap-2 text-sm text-slate-500"><Link to="/support">Contact support</Link><Link to="/addresses">Saved addresses</Link></div></div>
+        <div><h3 className="text-lg">Your health, our care</h3><p className="mt-3 text-sm leading-6 text-slate-500">Secure checkout and friendly support whenever you need it.</p></div>
+      </footer>
     </div>
   );
 }
