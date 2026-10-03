@@ -31,7 +31,7 @@ export default function App() {
   return (
     <>
       <Navbar />
-      <main className="mx-auto max-w-7xl px-5 py-8">
+      <main className="mx-auto max-w-7xl px-4 py-5 sm:px-5 sm:py-8">
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/catalog" element={<Catalog />} />

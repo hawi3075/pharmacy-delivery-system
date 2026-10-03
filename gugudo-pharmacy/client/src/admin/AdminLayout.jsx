@@ -82,16 +82,16 @@ export default function AdminLayout() {
   );
 
   return (
-    <div className="grid gap-6 md:grid-cols-[17rem_minmax(0,1fr)] lg:grid-cols-[19rem_minmax(0,1fr)]">
+    <div className="grid min-w-0 gap-4 sm:gap-6 md:grid-cols-[17rem_minmax(0,1fr)] lg:grid-cols-[19rem_minmax(0,1fr)]">
       {/* Mobile: compact scrolling tabs */}
-      <nav className="no-scrollbar -mx-1 flex gap-2 overflow-x-auto px-1 pb-1 md:hidden" aria-label="Admin">
+      <nav className="no-scrollbar -mx-1 flex max-w-full gap-2 overflow-x-auto px-1 pb-1 md:hidden" aria-label="Admin">
         {[...manage, ...(isSuper ? sup : [])].map((i) => (
           <NavLink key={i.to} to={i.to} end={i.end} className={pill}><Icon name={i.icon} />{i.label}{i.badge > 0 && <span className="rounded-full bg-rose-600 px-1.5 text-xs text-white">{i.badge}</span>}</NavLink>
         ))}
       </nav>
 
       {/* Desktop: large full-height sidebar */}
-      <aside className="card hidden flex-col p-5 md:flex md:self-start [@media(min-height:860px)]:sticky [@media(min-height:860px)]:top-[5.25rem]" aria-label="Admin">
+      <aside className="card hidden max-h-[calc(100vh-6.75rem)] flex-col overflow-y-auto overscroll-contain p-5 md:sticky md:top-[5.25rem] md:flex md:self-start" aria-label="Admin">
         <div className="flex items-center gap-3 rounded-2xl bg-brand-light p-4 dark:bg-slate-700">
           <span className="grid h-12 w-12 shrink-0 place-items-center rounded-full bg-brand text-lg font-bold text-white">{user.name[0]?.toUpperCase()}</span>
           <div className="min-w-0">
