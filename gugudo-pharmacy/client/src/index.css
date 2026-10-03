@@ -43,6 +43,16 @@
 .blob { position: absolute; border-radius: 9999px; filter: blur(60px); opacity: .55; animation: drift 14s ease-in-out infinite alternate; pointer-events: none; }
 @keyframes drift { to { transform: translate(30px, -20px) scale(1.1); } }
 
+.medicine-art { opacity: .95; transform: rotate(-5deg); }
+.medicine-pill { position: absolute; display: block; height: 28px; width: 72px; border: 4px solid rgba(255,255,255,.75); border-radius: 999px; box-shadow: 0 12px 22px rgba(23,63,59,.18); }
+.medicine-pill::after { content: ''; position: absolute; left: 50%; top: -1px; bottom: -1px; border-left: 2px solid rgba(23,63,59,.18); }
+.medicine-pill--coral { background: linear-gradient(90deg, #ff9a8b 50%, #fff0e5 50%); }
+.medicine-pill--gold { background: linear-gradient(90deg, #f4c95d 50%, #fff7d6 50%); }
+.medicine-bottle { position: absolute; height: 80px; width: 48px; border: 4px solid rgba(255,255,255,.7); border-radius: 9px 9px 13px 13px; background: linear-gradient(90deg, #8ed1c2 0 20%, #f8fff8 20% 80%, #8ed1c2 80%); box-shadow: 0 12px 22px rgba(23,63,59,.18); }
+.medicine-bottle::before { content: ''; position: absolute; left: 6px; right: 6px; top: -17px; height: 16px; border-radius: 5px 5px 2px 2px; background: #173f3b; }
+.medicine-bottle i { position: absolute; left: 8px; right: 8px; top: 29px; height: 20px; border-radius: 3px; background: #f4c95d; }
+.medicine-cross { position: absolute; color: #0e6f7e; font-size: 3.5rem; font-weight: 800; line-height: 1; }
+
 .no-scrollbar { scrollbar-width: none; }
 .no-scrollbar::-webkit-scrollbar { display: none; }
 

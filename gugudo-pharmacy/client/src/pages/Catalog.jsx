@@ -48,6 +48,41 @@ function SortMenu({ value, onChange, x }) {
   );
 }
 
+function CategoryMenu({ value, onChange, cats, x }) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef(null);
+  useEffect(() => {
+    const h = (e) => { if (ref.current && !ref.current.contains(e.target)) setOpen(false); };
+    document.addEventListener('mousedown', h);
+    return () => document.removeEventListener('mousedown', h);
+  }, []);
+  const current = cats.find((c) => String(c.id) === value);
+  return (
+    <div className="relative" ref={ref} onKeyDown={(e) => e.key === 'Escape' && setOpen(false)}>
+      <button type="button" aria-haspopup="listbox" aria-expanded={open} onClick={() => setOpen(!open)}
+        className="flex h-10 items-center gap-2 rounded-full border border-[#d6d9d2] bg-white px-4 text-sm font-bold text-slate-700 transition hover:border-brand dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200">
+        <span className="hidden text-slate-400 sm:inline">Category:</span>{current?.name || x('all')}
+        <span aria-hidden className={`text-[10px] transition ${open ? 'rotate-180' : ''}`}>▼</span>
+      </button>
+      {open && (
+        <ul role="listbox" className="card absolute right-0 top-full z-30 mt-2 max-h-72 w-60 overflow-y-auto p-1.5 shadow-xl">
+          {[{ id: '', name: x('all') }, ...cats].map((c) => {
+            const on = String(c.id) === value;
+            return (
+              <li key={c.id || 'all'}>
+                <button type="button" role="option" aria-selected={on} onClick={() => { onChange(String(c.id)); setOpen(false); }}
+                  className={`flex w-full items-center justify-between rounded-lg px-3 py-2.5 text-left text-sm font-semibold transition hover:bg-brand-light dark:hover:bg-slate-700 ${on ? 'bg-brand-light text-brand dark:bg-slate-700' : 'text-slate-700 dark:text-slate-200'}`}>
+                  <span className="truncate">{c.name}</span>{on && <span aria-hidden>✓</span>}
+                </button>
+              </li>
+            );
+          })}
+        </ul>
+      )}
+    </div>
+  );
+}
+
 function ViewToggle({ value, onChange, x }) {
   const btn = (v, label, icon) => (
     <button type="button" onClick={() => onChange(v)} aria-label={label} title={label} aria-pressed={value === v}
@@ -133,6 +168,12 @@ export default function Catalog() {
       <section className="relative overflow-hidden rounded-[2rem] bg-[#e6f6f8] px-6 py-10 dark:bg-slate-800 md:px-12 md:py-14">
         <span className="blob -right-10 -top-12 h-56 w-56 bg-[#0e6f7e]/30" />
         <span className="blob -bottom-16 left-1/3 h-48 w-48 bg-[#7fd6c2]/40" style={{ animationDelay: '-6s' }} />
+        <div className="medicine-art absolute right-8 top-8 hidden h-44 w-64 md:block" aria-hidden>
+          <span className="medicine-pill medicine-pill--coral left-5 top-20 rotate-[-24deg]" />
+          <span className="medicine-pill medicine-pill--gold left-28 top-8 rotate-[32deg]" />
+          <span className="medicine-bottle right-2 top-16 rotate-[12deg]"><i /></span>
+          <span className="medicine-cross right-28 top-4">+</span>
+        </div>
         <div className="relative">
           <nav aria-label="Breadcrumb" className="text-xs font-bold text-brand"><Link to="/" className="hover:underline">{x('home')}</Link> <span aria-hidden>/</span> {x('title')}</nav>
           <h1 className="mt-3 text-4xl text-[#173f3b] dark:text-white md:text-6xl">{x('title')}</h1>
@@ -153,6 +194,7 @@ export default function Catalog() {
             {cats.map((c) => <button type="button" key={c.id} aria-pressed={String(c.id) === category} onClick={() => set('category', String(c.id))} className={chip(String(c.id) === category)}>{c.name}</button>)}
           </div>
           <div className="flex shrink-0 items-center gap-2">
+            <CategoryMenu value={category} onChange={(v) => set('category', v)} cats={cats} x={x} />
             <SortMenu value={sort} onChange={(v) => set('sort', v === 'newest' ? '' : v)} x={x} />
             <ViewToggle value={view} onChange={(v) => set('view', v === 'grid' ? '' : v)} x={x} />
           </div>
