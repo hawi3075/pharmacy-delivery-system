@@ -10,6 +10,17 @@ const L = {
   am: { home: 'መነሻ', title: 'መድኃኒቶች', sub: 'የታመኑ መድኃኒቶችን እና የዕለት ተዕለት የጤና ምርቶችን ያግኙ።', search: 'በስም ወይም በንጥረ ነገር ይፈልጉ', all: 'ሁሉም መድኃኒቶች', sort: 'ደርድር', newest: 'አዲስ', top: 'ከፍተኛ ደረጃ', low: 'ዋጋ፡ ከዝቅተኛ ወደ ከፍተኛ', high: 'ዋጋ፡ ከከፍተኛ ወደ ዝቅተኛ', name: 'ስም፡ ከ A እስከ Z', grid: 'ፍርግርግ እይታ', list: 'ዝርዝር እይታ', count: 'መድኃኒቶች', forq: 'ውጤቶች ለ', clear: 'ማጣሪያዎችን አጽዳ', none: 'ከፍለጋዎ ጋር የሚዛመድ መድኃኒት የለም።', shop: 'ግዢ', help: 'እገዛ', tag: 'የታመኑ መድኃኒቶች፣ እስከ ደጃፍዎ።', rights: 'መብቱ በሕግ የተጠበቀ ነው።', contact: 'አግኙን', about: 'ስለ እኛ', support: 'ድጋፍ', orders: 'ትዕዛዞቼ', wish: 'ተወዳጆች' },
 };
 
+const categoryVisuals = [
+  { match: 'pain', icon: '✚', description: 'Comfort and everyday pain relief', image: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=700&q=80' },
+  { match: 'vitamin', icon: '✦', description: 'Daily support for your wellbeing', image: 'https://images.unsplash.com/photo-1550572017-edd951aa8ca8?auto=format&fit=crop&w=700&q=80' },
+  { match: 'supplement', icon: '✦', description: 'Nourishment for a healthier routine', image: 'https://images.unsplash.com/photo-1600185365483-26d7a4cc7519?auto=format&fit=crop&w=700&q=80' },
+  { match: 'first aid', icon: '＋', description: 'Be ready for life’s little surprises', image: 'https://images.unsplash.com/photo-1603398938378-e54eab446dde?auto=format&fit=crop&w=700&q=80' },
+  { match: 'allerg', icon: '◌', description: 'Gentle relief when you need it', image: 'https://images.unsplash.com/photo-1471864190281-a93a3070b6de?auto=format&fit=crop&w=700&q=80' },
+  { match: 'diabet', icon: '♡', description: 'Thoughtful support for daily care', image: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=700&q=80' },
+];
+const defaultCategoryVisual = { icon: '✚', description: 'Trusted care, thoughtfully selected', image: 'https://images.unsplash.com/photo-1471864190281-a93a3070b6de?auto=format&fit=crop&w=700&q=80' };
+const getCategoryVisual = (name = '') => categoryVisuals.find((v) => name.toLowerCase().includes(v.match)) || defaultCategoryVisual;
+
 const Svg = ({ children }) => <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">{children}</svg>;
 
 function SortMenu({ value, onChange, x }) {
@@ -185,6 +196,38 @@ export default function Catalog() {
           </div>
         </div>
       </section>
+
+      {/* Visual category guide */}
+      {cats.length > 0 && (
+        <section className="mt-8">
+          <div className="mb-5 flex items-end justify-between gap-4">
+            <div>
+              <p className="text-sm font-bold text-brand">Find your care</p>
+              <h2 className="mt-1 text-3xl text-[#173f3b] dark:text-white md:text-4xl">Explore by category</h2>
+            </div>
+            <p className="hidden max-w-xs text-right text-sm leading-6 text-slate-500 md:block">From daily vitamins to first aid, discover trusted essentials in one place.</p>
+          </div>
+          <div className="no-scrollbar grid auto-cols-[15rem] grid-flow-col gap-4 overflow-x-auto pb-3 md:grid-flow-row md:grid-cols-3 md:overflow-visible lg:grid-cols-4">
+            {cats.map((c) => {
+              const visual = getCategoryVisual(c.name);
+              const count = !q && !category && products ? products.filter((p) => String(p.categoryId ?? p.category?.id) === String(c.id)).length : null;
+              const active = String(c.id) === category;
+              return (
+                <Link key={c.id} to={`/catalog?category=${c.id}`} className={`category-feature group relative h-52 overflow-hidden rounded-2xl ${active ? 'ring-2 ring-brand ring-offset-2' : ''}`}>
+                  <img src={visual.image} alt="" loading="lazy" className="absolute inset-0 h-full w-full object-cover transition duration-700 group-hover:scale-110" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#102f2c]/95 via-[#102f2c]/25 to-transparent" />
+                  <div className="absolute inset-x-0 bottom-0 p-5 text-white">
+                    <span className="mb-2 grid h-9 w-9 place-items-center rounded-xl bg-white/20 text-lg backdrop-blur">{visual.icon}</span>
+                    <h3 className="text-2xl">{c.name}</h3>
+                    <p className="mt-1 text-xs text-white/75">{visual.description}</p>
+                    <p className="mt-3 text-xs font-bold text-[#b9f0dc]">{count === null ? 'Browse collection' : `${count} ${count === 1 ? 'medicine' : 'medicines'}`} <span className="ml-1 transition group-hover:ml-2">→</span></p>
+                  </div>
+                </Link>
+              );
+            })}
+          </div>
+        </section>
+      )}
 
       {/* Sticky bar: categories, sort and view stay visible while you scroll to the end */}
       <div className="sticky top-[4.25rem] z-20 my-6 rounded-2xl border border-[#e5e4dc] bg-white/90 p-3 shadow-md backdrop-blur dark:border-slate-700 dark:bg-slate-900/90">
