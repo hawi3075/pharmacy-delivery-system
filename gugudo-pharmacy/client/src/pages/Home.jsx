@@ -4,6 +4,7 @@ import { api } from '../api';
 import { useApp } from '../store';
 import { ProductImg } from '../components/ProductCard';
 import { money } from '../components/ui';
+import { WishButton } from './Wishlist';
 
 const heroImage = 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=1200&q=85';
 const catImages = [
@@ -38,15 +39,19 @@ function ShopCard({ p }) {
         <div className="transition duration-500 group-hover:scale-105"><ProductImg p={p} className="h-44" /></div>
         {p.requiresRx && <span className="absolute left-2 top-2 rounded-full bg-rose-600 px-2.5 py-1 text-[11px] font-bold text-white">Rx</span>}
         {out && <span className="absolute inset-0 grid place-items-center bg-white/70 text-sm font-bold text-slate-800">{t('outOfStock')}</span>}
+        <WishButton id={p.id} name={p.name} />
       </Link>
       <div className="mt-3 flex-1">
         <p className="text-xs font-semibold text-brand">{p.category?.name}</p>
         <Link to={`/product/${p.id}`} className="mt-0.5 block font-bold leading-snug hover:text-brand">{p.name}</Link>
         <div className="mt-1.5"><Stars value={getRating(p)} /></div>
       </div>
-      <div className="mt-3 flex items-center justify-between">
+      <div className="mt-3 flex flex-wrap items-center justify-between gap-2">
         <b className="text-lg">{money(p.price)}</b>
-        <button className="btn !px-4 !py-2" disabled={out} onClick={() => addToCart(p)} aria-label={`${t('addToCart')}: ${p.name}`}>+ {t('add')}</button>
+        <div className="flex gap-2">
+          <Link to={`/product/${p.id}`} className="btn-ghost !px-3 !py-2 text-xs">Details</Link>
+          <button className="btn !px-3 !py-2" disabled={out} onClick={() => addToCart(p)} aria-label={`${t('addToCart')}: ${p.name}`}>+ {t('add')}</button>
+        </div>
       </div>
     </div>
   );
@@ -136,7 +141,8 @@ export default function Home() {
   }, []);
 
   const shown = cats.slice(0, 5);
-  const trending = [...products].sort((a, b) => getRating(b) - getRating(a));
+  const trending = [...products].sort((a, b) => b.id - a.id);
+  const topRated = [...products].sort((a, b) => getRating(b) - getRating(a));
   const newest = [...products].sort((a, b) => b.id - a.id).slice(0, 4);
   const hi = (ms) => ({ animationDelay: `${ms}ms` });
   const marquee = ['Licensed pharmacists', 'Cold-chain delivery', 'Pay on arrival', 'Prescription checked', 'Secure checkout'];
@@ -200,14 +206,15 @@ export default function Home() {
         </section></Reveal>
       )}
 
-      {/* Promo band */}
+      {/* Special offer */}
       <Reveal>
         <section className="relative overflow-hidden rounded-[2rem] bg-[#173f3b] px-7 py-10 text-white md:px-14 md:py-12">
           <span className="blob -right-10 -top-10 h-60 w-60 bg-[#0e6f7e]" />
           <div className="relative flex flex-wrap items-center justify-between gap-6">
             <div>
-              <h2 className="max-w-xl text-3xl md:text-4xl">Free delivery on orders over ETB 1,000</h2>
-              <p className="mt-2 text-white/70">Pay in cash when your medicines arrive.</p>
+              <p className="text-sm font-extrabold uppercase tracking-[0.2em] text-[#7fd6c2]">Special offer</p>
+              <h2 className="mt-2 max-w-xl text-3xl md:text-4xl">Free delivery on orders over ETB 1,000</h2>
+              <p className="mt-2 text-white/70">Save more on everyday care while supplies last. Pay in cash when your medicines arrive.</p>
             </div>
             <Link to="/catalog" className="btn !bg-white !px-7 !py-3 !text-[#173f3b] hover:!bg-[#e6f6f8]">Start shopping</Link>
           </div>
@@ -222,6 +229,14 @@ export default function Home() {
             {newest.map((p, i) => <Reveal key={p.id} delay={i * 90}><ShopCard p={p} /></Reveal>)}
           </div>
         </section>
+      )}
+
+      {/* Top rated */}
+      {topRated.length > 0 && (
+        <Reveal><section>
+          <SectionTitle eyebrow="Trusted by our community" title="Top rated products" />
+          <Carousel items={topRated} />
+        </section></Reveal>
       )}
 
       {/* Marquee */}
@@ -257,6 +272,27 @@ export default function Home() {
               <p className="mt-2 text-sm font-bold text-white/70">{label}</p>
             </div>
           ))}
+        </section>
+      </Reveal>
+
+      {/* Why choose us */}
+      <Reveal>
+        <section className="rounded-[2rem] bg-[#f1eee5] px-7 py-10 dark:bg-slate-800 md:px-14 md:py-12">
+          <SectionTitle eyebrow="The Doka difference" title="Why choose Doka Mart?" link="/about" />
+          <div className="grid gap-4 md:grid-cols-4">
+            {[
+              ['✦', 'Pharmacist approved', 'Every product is selected with your wellbeing in mind.'],
+              ['✓', 'Quality you can trust', 'Reliable medicines and essentials from verified sources.'],
+              ['◷', 'Delivery that fits you', 'Fast, careful delivery with pay-on-arrival convenience.'],
+              ['♡', 'Care that feels human', 'Friendly support whenever you need help choosing.'],
+            ].map(([icon, title, text]) => (
+              <div key={title} className="rounded-2xl bg-white p-5 dark:bg-slate-900">
+                <span className="grid h-10 w-10 place-items-center rounded-xl bg-brand-light text-lg text-brand dark:bg-slate-700">{icon}</span>
+                <h3 className="mt-4 text-xl">{title}</h3>
+                <p className="mt-2 text-sm leading-6 text-slate-500 dark:text-slate-400">{text}</p>
+              </div>
+            ))}
+          </div>
         </section>
       </Reveal>
 
