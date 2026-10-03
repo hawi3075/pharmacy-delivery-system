@@ -26,7 +26,7 @@ export default function Navbar() {
   return (
     <header className="sticky top-0 z-30 border-b border-[#e5e4dc] bg-[#f8f6f0]/95 backdrop-blur dark:border-slate-700 dark:bg-slate-950/95">
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-3 px-5 py-4">
-        <Link to="/" className="flex items-center gap-2 text-2xl font-bold text-[#207065]"><span className="grid h-9 w-9 place-items-center rounded-xl bg-[#0e6f7e] text-lg text-white">✚</span>Gugudo</Link>
+        <Link to="/" className="flex items-center gap-2 text-2xl font-bold text-[#207065]"><span className="grid h-9 w-9 place-items-center rounded-xl bg-[#0e6f7e] text-lg text-white">✚</span>Doka Mart</Link>
         <button className="md:hidden" onClick={() => setOpen(!open)} aria-label="Menu">☰</button>
         <nav className={`${open ? 'flex' : 'hidden'} absolute left-0 right-0 top-full flex-col gap-2 border-b bg-white p-4 dark:bg-slate-900 md:static md:flex md:flex-row md:items-center md:border-0 md:p-0 md:dark:bg-transparent md:bg-transparent`} onClick={() => setOpen(false)}>
           <NavLink to="/" end className={link}>{t('home')}</NavLink>

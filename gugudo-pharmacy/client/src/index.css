@@ -21,3 +21,8 @@
 
 .mesh-bg { background: radial-gradient(circle at 82% 12%, rgba(14,111,126,.2), transparent 28%), radial-gradient(circle at 8% 88%, rgba(32,112,101,.15), transparent 30%), #f1eee5; }
 .dark .mesh-bg { background: radial-gradient(circle at 82% 12%, rgba(14,111,126,.18), transparent 28%), #17201e; }
+
+.hero-grid { min-height: 560px; }
+.ticker-track { animation: ticker 28s linear infinite; }
+@keyframes ticker { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+@media (prefers-reduced-motion: reduce) { .ticker-track { animation: none; } }
