@@ -22,6 +22,7 @@ import AdminCustomers from './admin/AdminCustomers';
 import AdminFinance from './admin/AdminFinance';
 import AdminAdmins from './admin/AdminAdmins';
 import AdminAudit from './admin/AdminAudit';
+import AdminReviews from './admin/AdminReviews';
 
 const CUSTOMER = ['CUSTOMER'];
 const STAFF = ['ADMIN', 'SUPER_ADMIN'];
@@ -48,6 +49,7 @@ export default function App() {
             <Route index element={<Dashboard />} />
             <Route path="orders" element={<AdminOrders />} />
             <Route path="products" element={<AdminProducts />} />
+            <Route path="reviews" element={<AdminReviews />} />
             <Route path="messages" element={<AdminMessages />} />
             <Route path="customers" element={<AdminCustomers />} />
             <Route path="finance" element={<AdminFinance />} />

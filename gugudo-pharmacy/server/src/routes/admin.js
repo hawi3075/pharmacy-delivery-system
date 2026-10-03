@@ -139,6 +139,22 @@ r.patch('/customers/:id/block', wrap(async (req, res) => {
   audit(req.user.id, blocked ? 'CUSTOMER_BLOCK' : 'CUSTOMER_UNBLOCK', req.params.id);
   res.json({ ok: true });
 }));
+r.patch('/customers/:id', wrap(async (req, res) => {
+  const d = z.object({ name: z.string().min(2).optional(), phone: z.string().min(7).optional() }).parse(req.body);
+  const customer = await prisma.user.updateMany({ where: { id: Number(req.params.id), role: 'CUSTOMER' }, data: d });
+  if (!customer.count) return res.status(404).json({ error: 'Customer not found' });
+  audit(req.user.id, 'CUSTOMER_UPDATE', req.params.id);
+  res.json({ ok: true });
+}));
+r.delete('/customers/:id', wrap(async (req, res) => {
+  const id = Number(req.params.id);
+  const customer = await prisma.user.findFirst({ where: { id, role: 'CUSTOMER' }, include: { _count: { select: { orders: true } } } });
+  if (!customer) return res.status(404).json({ error: 'Customer not found' });
+  if (customer._count.orders) return res.status(409).json({ error: 'Customers with order history cannot be deleted. Suspend the account instead.' });
+  await prisma.user.delete({ where: { id } });
+  audit(req.user.id, 'CUSTOMER_DELETE', String(id));
+  res.json({ ok: true });
+}));
 
 /* ---- Finance ---- */
 r.get('/finance', wrap(async (_req, res) => {

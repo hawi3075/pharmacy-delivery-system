@@ -20,7 +20,11 @@ export default function Auth({ mode }) {
     try {
       const data = await api(isReg ? '/auth/register' : '/auth/login', { method: 'POST', body: isReg ? f : { email: f.email, password: f.password } });
       login(data);
-      nav(sp.get('next') || (data.user.role === 'CUSTOMER' ? '/' : '/admin'), { replace: true });
+      const requested = sp.get('next') || '';
+      const destination = data.user.role === 'CUSTOMER'
+        ? (requested.startsWith('/admin') ? '/' : requested || '/')
+        : (requested.startsWith('/admin') ? requested : '/admin');
+      nav(destination, { replace: true });
     } catch (e2) { setErr(e2.message); } finally { setBusy(false); }
   }
 
