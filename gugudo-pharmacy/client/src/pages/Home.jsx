@@ -278,7 +278,7 @@ export default function Home() {
       {/* Why choose us */}
       <Reveal>
         <section className="rounded-[2rem] bg-[#f1eee5] px-7 py-10 dark:bg-slate-800 md:px-14 md:py-12">
-          <SectionTitle eyebrow="The Doka difference" title="Why choose Doka Mart?" link="/about" />
+          <SectionTitle eyebrow="The Gugudo difference" title="Why choose Gugudo?" link="/about" />
           <div className="grid gap-4 md:grid-cols-4">
             {[
               ['✦', 'Pharmacist approved', 'Every product is selected with your wellbeing in mind.'],

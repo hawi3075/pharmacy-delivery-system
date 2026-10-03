@@ -52,6 +52,9 @@
 .medicine-bottle::before { content: ''; position: absolute; left: 6px; right: 6px; top: -17px; height: 16px; border-radius: 5px 5px 2px 2px; background: #173f3b; }
 .medicine-bottle i { position: absolute; left: 8px; right: 8px; top: 29px; height: 20px; border-radius: 3px; background: #f4c95d; }
 .medicine-cross { position: absolute; color: #0e6f7e; font-size: 3.5rem; font-weight: 800; line-height: 1; }
+.contact-art__circle { position: absolute; right: 1rem; top: 1rem; height: 15rem; width: 15rem; border-radius: 9999px; background: #b9f0dc; opacity: .7; }
+.contact-art__cross { position: absolute; right: 7rem; top: 2rem; color: #0e6f7e; font-size: 5rem; font-weight: 800; }
+.contact-art__pill { position: absolute; right: 4rem; top: 8rem; height: 2.2rem; width: 8rem; transform: rotate(-28deg); border: 5px solid rgba(255,255,255,.8); border-radius: 9999px; background: linear-gradient(90deg,#f49c8d 50%,#fff2e8 50%); box-shadow: 0 15px 25px rgba(23,63,59,.18); }
 
 .no-scrollbar { scrollbar-width: none; }
 .no-scrollbar::-webkit-scrollbar { display: none; }
