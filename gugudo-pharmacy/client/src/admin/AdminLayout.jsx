@@ -59,7 +59,7 @@ export default function AdminLayout() {
   ];
 
   const side = ({ isActive }) =>
-    `flex items-center gap-3.5 rounded-xl px-4 py-3.5 text-[15px] font-bold transition ${isActive
+    `flex items-center gap-3.5 rounded-xl px-4 py-3 text-[15px] font-bold transition [@media(max-height:820px)]:py-2.5 ${isActive
       ? 'bg-brand text-white shadow-md'
       : 'text-slate-600 hover:bg-brand-light hover:text-brand dark:text-slate-300 dark:hover:bg-slate-700'}`;
   const pill = ({ isActive }) =>
@@ -70,7 +70,7 @@ export default function AdminLayout() {
   const Badge = ({ n }) => n > 0 ? <span className="ml-auto grid h-6 min-w-[1.5rem] place-items-center rounded-full bg-rose-600 px-1.5 text-xs font-bold text-white">{n}</span> : null;
   const group = (title, items) => (
     <div className="mt-2">
-      <p className="px-4 pb-2 pt-3 text-xs font-bold uppercase tracking-wider text-slate-400">{title}</p>
+      <p className="px-4 pb-1.5 pt-2 text-xs font-bold uppercase tracking-wider text-slate-400">{title}</p>
       <div className="grid gap-1">
         {items.map((i) => (
           <NavLink key={i.to} to={i.to} end={i.end} className={side}>
@@ -91,7 +91,7 @@ export default function AdminLayout() {
       </nav>
 
       {/* Desktop: large full-height sidebar */}
-      <aside className="card hidden flex-col p-5 md:sticky md:top-[5.25rem] md:flex md:h-[calc(100vh-6.5rem)]" aria-label="Admin">
+      <aside className="card hidden flex-col p-5 md:flex md:self-start [@media(min-height:860px)]:sticky [@media(min-height:860px)]:top-[5.25rem]" aria-label="Admin">
         <div className="flex items-center gap-3 rounded-2xl bg-brand-light p-4 dark:bg-slate-700">
           <span className="grid h-12 w-12 shrink-0 place-items-center rounded-full bg-brand text-lg font-bold text-white">{user.name[0]?.toUpperCase()}</span>
           <div className="min-w-0">
@@ -100,12 +100,12 @@ export default function AdminLayout() {
           </div>
         </div>
 
-        <nav className="no-scrollbar mt-3 flex-1 overflow-y-auto" aria-label="Admin menu">
+        <nav className="mt-3" aria-label="Admin menu">
           {group(x('manage'), manage)}
           {isSuper && group(x('superAdmin'), sup)}
         </nav>
 
-        <div className="mt-3 grid gap-1 border-t border-[#e5e4dc] pt-3 dark:border-slate-700">
+        <div className="mt-4 grid gap-1 border-t border-[#e5e4dc] pt-3 dark:border-slate-700">
           <Link to="/" className="flex items-center gap-3.5 rounded-xl px-4 py-3 text-[15px] font-bold text-slate-600 transition hover:bg-brand-light hover:text-brand dark:text-slate-300 dark:hover:bg-slate-700"><Icon name="store" />{x('store')}</Link>
           <button type="button" onClick={() => { logout(); nav('/'); }} className="flex items-center gap-3.5 rounded-xl px-4 py-3 text-left text-[15px] font-bold text-red-600 transition hover:bg-red-50 dark:hover:bg-red-950"><Icon name="logout" />{t('logout')}</button>
         </div>
