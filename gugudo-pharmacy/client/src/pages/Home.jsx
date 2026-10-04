@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { api } from '../api';
 import { useApp } from '../store';
-import { ProductImg } from '../components/ProductCard';
+import { DetailLink, ProductImg, Stars, getRating } from '../components/ProductCard';
 import { money } from '../components/ui';
 import { WishButton } from './Wishlist';
 
@@ -14,22 +14,6 @@ const catImages = [
   'https://images.unsplash.com/photo-1583947215259-38e31be8751f?auto=format&fit=crop&w=600&q=80',
 ];
 
-/* PLACEHOLDER rating (4.3 to 4.9, stable per product) until real reviews exist.
-   When the API returns p.rating, this uses it automatically. */
-const getRating = (p) => p.rating ?? Math.round((4.3 + ((p.id * 37) % 7) / 10) * 10) / 10;
-
-function Stars({ value, size = 'text-sm' }) {
-  return (
-    <span className={`inline-flex items-center gap-1.5 ${size}`} role="img" aria-label={`Rated ${value} out of 5`}>
-      <span className="relative inline-block leading-none tracking-tight text-slate-300" aria-hidden>
-        ★★★★★
-        <span className="absolute left-0 top-0 overflow-hidden whitespace-nowrap text-amber-400" style={{ width: `${(value / 5) * 100}%` }}>★★★★★</span>
-      </span>
-      <b className="text-xs text-slate-600 dark:text-slate-300">{value.toFixed(1)}</b>
-    </span>
-  );
-}
-
 function ShopCard({ p }) {
   const { t, addToCart } = useApp();
   const out = p.stock === 0;
@@ -40,6 +24,7 @@ function ShopCard({ p }) {
         {p.requiresRx && <span className="absolute left-2 top-2 rounded-full bg-rose-600 px-2.5 py-1 text-[11px] font-bold text-white">Rx</span>}
         {out && <span className="absolute inset-0 grid place-items-center bg-white/70 text-sm font-bold text-slate-800">{t('outOfStock')}</span>}
         <WishButton id={p.id} name={p.name} />
+        <DetailLink id={p.id} className="absolute right-12 top-2 z-10" />
       </Link>
       <div className="mt-3 flex-1">
         <p className="text-xs font-semibold text-brand">{p.category?.name}</p>
@@ -49,7 +34,7 @@ function ShopCard({ p }) {
       <div className="mt-3 flex flex-wrap items-center justify-between gap-2">
         <b className="text-lg">{money(p.price)}</b>
         <div className="flex gap-2">
-          <Link to={`/product/${p.id}`} className="btn-ghost !px-3 !py-2 text-xs">Details</Link>
+          <DetailLink id={p.id} />
           <button className="btn !px-3 !py-2" disabled={out} onClick={() => addToCart(p)} aria-label={`${t('addToCart')}: ${p.name}`}>+ {t('add')}</button>
         </div>
       </div>

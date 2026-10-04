@@ -20,6 +20,22 @@ export function Stars({ value, size = 'text-sm' }) {
   );
 }
 
+export function DetailLink({ id, className = '' }) {
+  return (
+    <Link
+      to={`/product/${id}`}
+      aria-label="View medicine details"
+      title="View medicine details"
+      className={`grid h-9 w-9 place-items-center rounded-full border border-[#d6d9d2] bg-white text-brand shadow-sm transition hover:border-brand hover:bg-brand-light ${className}`}
+    >
+      <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+        <circle cx="11" cy="11" r="7" />
+        <path d="m20 20-4-4M11 8v6M8 11h6" />
+      </svg>
+    </Link>
+  );
+}
+
 export function ProductImg({ p, className = 'h-40' }) {
   const src = img(p.imageUrl);
   return src
@@ -42,6 +58,7 @@ export default function ProductCard({ p, view = 'grid' }) {
           {out && <span className="absolute inset-0 grid place-items-center bg-white/75 text-sm font-bold text-slate-800">{t('outOfStock')}</span>}
         </Link>
         <WishButton id={p.id} name={p.name} />
+        <DetailLink id={p.id} className="absolute right-12 top-2 z-10" />
       </div>
 
       <div className={`min-w-0 flex-1 ${list ? 'flex flex-col justify-center' : 'mt-3'}`}>
@@ -55,7 +72,7 @@ export default function ProductCard({ p, view = 'grid' }) {
       <div className={list ? 'flex shrink-0 flex-col items-end justify-center gap-3' : 'mt-3 flex items-center justify-between gap-2'}>
         <b className="text-lg">{money(p.price)}</b>
         <div className="flex gap-2">
-          {list && <Link to={`/product/${p.id}`} className="btn-ghost !px-4 !py-2">Details</Link>}
+          {list && <DetailLink id={p.id} />}
           <button className="btn !px-4 !py-2" disabled={out} onClick={() => addToCart(p)} aria-label={`${t('addToCart')}: ${p.name}`}>{out ? t('outOfStock') : `+ ${t('add')}`}</button>
         </div>
       </div>

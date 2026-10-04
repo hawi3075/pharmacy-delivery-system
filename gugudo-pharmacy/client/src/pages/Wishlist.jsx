@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { api } from '../api';
 import { useApp } from '../store';
-import { ProductImg } from '../components/ProductCard';
+import { DetailLink, ProductImg, Stars, getRating } from '../components/ProductCard';
 import { Empty, PageTitle, money } from '../components/ui';
 
 /* ---------- Wishlist storage (browser only, saved as product ids) ---------- */
@@ -69,11 +69,15 @@ export default function Wishlist() {
       ) : (
         <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
           {items.map((p) => (
-            <div key={p.id} className="card flex flex-col p-3">
-              <Link to={`/product/${p.id}`}><ProductImg p={p} className="h-40" /></Link>
+            <div key={p.id} className="card group flex flex-col p-3">
+              <div className="relative">
+                <Link to={`/product/${p.id}`}><ProductImg p={p} className="h-40" /></Link>
+                <DetailLink id={p.id} className="absolute right-2 top-2" />
+              </div>
               <div className="mt-3 flex-1">
                 <p className="text-xs font-semibold text-brand">{p.category?.name}</p>
                 <Link to={`/product/${p.id}`} className="font-bold hover:text-brand">{p.name}</Link>
+                <div className="mt-1.5"><Stars value={getRating(p)} /></div>
                 {p.requiresRx && <p className="mt-1 text-xs font-semibold text-rose-600">{t('rxRequired')}</p>}
               </div>
               <b className="mt-2 text-lg">{money(p.price)}</b>
