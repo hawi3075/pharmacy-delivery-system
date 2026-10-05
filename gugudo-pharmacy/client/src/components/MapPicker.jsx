@@ -38,7 +38,7 @@ export default function MapPicker({ value, onChange, height = 260 }) {
       if (!value?.lat && navigator.geolocation)
         navigator.geolocation.getCurrentPosition((p) => { const pos = { lat: p.coords.latitude, lng: p.coords.longitude }; map.setCenter(pos); pick(pos); }, () => {});
     }).catch((e) => setErr(e.message));
-    // eslint-disable-next-line
+    
   }, []);
 
   if (err) return <div className="rounded-lg border border-dashed border-slate-300 p-4 text-sm text-slate-500">{err}</div>;
