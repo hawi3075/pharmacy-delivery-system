@@ -7,7 +7,7 @@ import { upload, fileUrl } from '../upload.js';
 const r = Router();
 r.use(...staff);
 
-/* ---- Dashboard ---- */
+
 r.get('/stats', wrap(async (_req, res) => {
   const since = new Date(Date.now() - 7 * 864e5);
   const [orders, pending, customers, products, recent, weekOrders] = await Promise.all([
