@@ -33,7 +33,6 @@ r.get('/stats', wrap(async (_req, res) => {
   });
 }));
 
-/* ---- Orders ---- */
 r.get('/orders', wrap(async (req, res) => {
   const where = req.query.status ? { status: String(req.query.status) } : {};
   res.json(await prisma.order.findMany({
