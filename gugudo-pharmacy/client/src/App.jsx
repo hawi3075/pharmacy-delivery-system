@@ -23,6 +23,7 @@ import AdminFinance from './admin/AdminFinance';
 import AdminAdmins from './admin/AdminAdmins';
 import AdminAudit from './admin/AdminAudit';
 import AdminReviews from './admin/AdminReviews';
+import AdminCategories from './admin/AdminCategories';
 
 const CUSTOMER = ['CUSTOMER'];
 const STAFF = ['ADMIN', 'SUPER_ADMIN'];
@@ -53,6 +54,7 @@ export default function App() {
             <Route path="messages" element={<AdminMessages />} />
             <Route path="customers" element={<AdminCustomers />} />
             <Route path="finance" element={<AdminFinance />} />
+            <Route path="categories" element={<AdminCategories />} />
             <Route path="admins" element={<Protected roles={['SUPER_ADMIN']}><AdminAdmins /></Protected>} />
             <Route path="audit" element={<Protected roles={['SUPER_ADMIN']}><AdminAudit /></Protected>} />
           </Route>
