@@ -58,6 +58,8 @@ export default function ProductDetail() {
   const [tab, setTab] = useState('clinical');
   const [active, setActive] = useState(0);
   const [related, setRelated] = useState([]);
+  const [review, setReview] = useState({ rating: 5, body: '' });
+  const [reviewError, setReviewError] = useState('');
 
   useEffect(() => {
     setP(null); setErr(''); setQty(1); setTab('clinical'); setActive(0);
@@ -78,7 +80,7 @@ export default function ProductDetail() {
   // Extra clinical content lives in p.details (JSON). Plain product fields still work as fallback.
   const d = p.details || {};
   const out = p.stock === 0;
-  const low = !out && p.stock <= (p.lowStockAt ?? 10);
+  const low = !out && p.stock < 5;
   const saved = has(p.id);
   const gallery = d.gallery?.length
     ? d.gallery
@@ -95,6 +97,16 @@ export default function ProductDetail() {
   const H = ({ children }) => <h3 className="text-2xl text-[#173f3b] dark:text-white">{children}</h3>;
   const para = 'mt-2 leading-7 text-slate-600 dark:text-slate-300';
   const facts = d.facts || [];
+  async function submitReview(e) {
+    e.preventDefault();
+    setReviewError('');
+    try {
+      await api('/me/reviews', { method: 'POST', body: { productId: p.id, rating: Number(review.rating), body: review.body } });
+      const updated = await api('/products/' + id);
+      setP(updated);
+      setReview({ rating: 5, body: '' });
+    } catch (e2) { setReviewError(e2.message); }
+  }
 
   return (
     <div>
@@ -210,7 +222,12 @@ export default function ProductDetail() {
               {(d.warnings || p.warnings) && <p className="mt-3 rounded-xl border border-rose-200 bg-rose-50 p-4 text-sm leading-6 text-rose-700 dark:border-rose-900 dark:bg-rose-950 dark:text-rose-300">{d.warnings || p.warnings}</p>}
               {!(d.sideEffects || p.sideEffects || d.warnings || p.warnings) && <p className={para}>{x('defSafety')}</p>}
             </>)}
-            {tab === 'reviews' && (<><H>{x('tReviews')}</H><div className="mt-3"><Stars value={getRating(p)} /></div><p className={para}>{x('defReviews')}</p></>)}
+            {tab === 'reviews' && (<>
+              <H>{x('tReviews')}</H>
+              <div className="mt-3"><Stars value={getRating(p)} /></div>
+              {p.reviews?.length ? <div className="mt-4 space-y-3">{p.reviews.map((r) => <article className="rounded-xl border p-3 dark:border-slate-700" key={r.id}><p className="text-amber-500">{'★'.repeat(r.rating)}<span className="text-slate-300">{'★'.repeat(5 - r.rating)}</span></p><p className="mt-1 text-sm">{r.body}</p><p className="mt-2 text-xs text-slate-500">{r.customer.name}</p></article>)}</div> : <p className={para}>{x('defReviews')}</p>}
+              {user ? <form onSubmit={submitReview} className="mt-5 space-y-3 rounded-xl border p-4 dark:border-slate-700"><p className="font-bold">Share your review</p><select className="input" value={review.rating} onChange={(e) => setReview({ ...review, rating: e.target.value })}><option value="5">5 stars</option><option value="4">4 stars</option><option value="3">3 stars</option><option value="2">2 stars</option><option value="1">1 star</option></select><textarea required minLength={2} maxLength={1000} className="input" value={review.body} onChange={(e) => setReview({ ...review, body: e.target.value })} placeholder="Write your review" /><button className="btn">Submit review</button>{reviewError && <p className="text-sm text-red-600">{reviewError}</p>}</form> : <p className="mt-4 text-sm text-slate-500">Sign in to leave a review.</p>}
+            </>)}
             {tab === 'inter' && (<><H>{x('tInter')}</H><p className={para}>{d.interactions || p.interactions || x('defInter')}</p></>)}
             <Link to="/support" className="btn-ghost mt-6">{x('ask')}</Link>
           </div>

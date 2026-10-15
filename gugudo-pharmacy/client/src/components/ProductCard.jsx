@@ -46,7 +46,7 @@ export function ProductImg({ p, className = 'h-40' }) {
 export default function ProductCard({ p, view = 'grid' }) {
   const { t, addToCart } = useApp();
   const out = p.stock === 0;
-  const low = !out && p.stock <= (p.lowStockAt ?? 10);
+  const low = !out && p.stock < 5;
   const list = view === 'list';
 
   return (

@@ -23,7 +23,7 @@ export default function AdminCustomers() {
             <tr key={c.id} className="border-t dark:border-slate-700">
               <td className="td font-semibold">{c.name}</td><td className="td">{c.email}</td><td className="td">{c.phone}</td><td className="td">{c._count.orders}</td>
               <td className="td text-xs">{fmtDate(c.createdAt)}</td>
-              <td className="td text-right"><button className="mr-3 font-semibold text-brand" onClick={() => setEditing({ ...c })}>{t('edit')}</button><button className={c.blocked ? 'mr-3 font-semibold text-brand' : 'mr-3 text-red-600'} onClick={() => toggle(c)}>{c.blocked ? 'Reactivate' : 'Suspend'}</button><button className="text-red-600" onClick={() => remove(c)}>Delete</button></td>
+              <td className="td text-right"><button className="btn-ghost mr-2 !px-3 !py-1.5 text-xs" onClick={() => setEditing({ ...c })}>{t('edit')}</button><button className={`${c.blocked ? 'btn-ghost' : 'btn-danger'} mr-2 !px-3 !py-1.5 text-xs`} onClick={() => toggle(c)}>{c.blocked ? 'Reactivate' : 'Suspend'}</button><button className="btn-danger !px-3 !py-1.5 text-xs" onClick={() => remove(c)}>Delete</button></td>
             </tr>))}
           </tbody></table></div>
       </div>

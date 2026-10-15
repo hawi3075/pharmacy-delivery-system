@@ -107,6 +107,14 @@ r.post('/categories', wrap(async (req, res) => {
   const { name, parentId } = z.object({ name: z.string().min(2), parentId: z.coerce.number().int().positive().nullable().optional() }).parse(req.body);
   res.json(await prisma.category.upsert({ where: { name }, update: { parentId: parentId ?? null }, create: { name, parentId: parentId ?? null } }));
 }));
+r.put('/categories/:id', wrap(async (req, res) => {
+  const id = Number(req.params.id);
+  const d = z.object({ name: z.string().min(2), parentId: z.coerce.number().int().positive().nullable().optional() }).parse(req.body);
+  if (d.parentId === id) return res.status(400).json({ error: 'A category cannot be its own parent' });
+  const parentId = d.parentId ?? null;
+  if (parentId && !(await prisma.category.findUnique({ where: { id: parentId } }))) return res.status(400).json({ error: 'Parent category not found' });
+  res.json(await prisma.category.update({ where: { id }, data: { name: d.name, parentId } }));
+}));
 
 r.get('/reviews', wrap(async (_req, res) => res.json(await prisma.review.findMany({
   include: { customer: { select: { id: true, name: true, email: true } }, product: { select: { id: true, name: true } } },

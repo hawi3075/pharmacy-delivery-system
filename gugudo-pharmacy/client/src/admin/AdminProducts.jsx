@@ -3,7 +3,7 @@ import { api, img } from '../api';
 import { useApp } from '../store';
 import { Err, Field, PageTitle, money } from '../components/ui';
 
-const blank = { name: '', generic: '', description: '', price: '', stock: 0, lowStockAt: 10, requiresRx: false, categoryId: '', batchNo: '', expiry: '', manufacturer: '', active: true };
+const blank = { name: '', generic: '', description: '', price: '', stock: 0, lowStockAt: 5, requiresRx: false, categoryId: '', batchNo: '', expiry: '', manufacturer: '', active: true };
 
 export default function AdminProducts() {
   const { t } = useApp();
@@ -62,8 +62,8 @@ export default function AdminProducts() {
                 </div></td>
                 <td className="td">{p.category?.name}</td>
                 <td className="td">{money(p.price)}</td>
-                <td className={`td font-semibold ${p.stock <= p.lowStockAt ? 'text-red-600' : ''}`}>{p.stock}</td>
-                <td className="td whitespace-nowrap text-right"><button className="mr-3 font-semibold text-brand" onClick={() => open(p)}>{t('edit')}</button><button className="text-red-600" onClick={() => remove(p)}>{t('delete')}</button></td>
+                <td className={`td font-semibold ${p.stock > 0 && p.stock < 5 ? 'text-red-600' : ''}`}>{p.stock}</td>
+                <td className="td whitespace-nowrap text-right"><button className="btn-ghost mr-2 !px-3 !py-1.5 text-xs" onClick={() => open(p)}>{t('edit')}</button><button className="btn-danger !px-3 !py-1.5 text-xs" onClick={() => remove(p)}>{t('delete')}</button></td>
               </tr>
             ))}
           </tbody>
@@ -87,7 +87,7 @@ export default function AdminProducts() {
                 <select className="input" value={form.categoryId} onChange={set('categoryId')}><option value="">—</option>{cats.map((c) => <optgroup key={c.id} label={c.name}><option value={c.id}>{c.name} (main category)</option>{(c.children || []).map((child) => <option key={child.id} value={child.id}>↳ {child.name}</option>)}</optgroup>)}</select>
               </Field>
               <Field label={t('stock')}><input type="number" min="0" className="input" value={form.stock} onChange={set('stock')} /></Field>
-              <Field label="Low-stock alert at"><input type="number" min="0" className="input" value={form.lowStockAt} onChange={set('lowStockAt')} /></Field>
+              <Field label="Low-stock alert"><input readOnly className="input bg-slate-100 dark:bg-slate-800" value="Less than 5 items" /></Field>
               <Field label="Batch number"><input className="input" value={form.batchNo || ''} onChange={set('batchNo')} /></Field>
               <Field label="Expiry date"><input type="date" className="input" value={form.expiry} onChange={set('expiry')} /></Field>
               <Field label="Manufacturer"><input className="input" value={form.manufacturer || ''} onChange={set('manufacturer')} /></Field>

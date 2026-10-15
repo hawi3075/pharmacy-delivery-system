@@ -32,7 +32,7 @@ export default function AdminMessages() {
         <div className="card max-h-[32rem] overflow-y-auto">
           {!threads.length && <p className="p-4 text-sm text-slate-500">{t('noItems')}</p>}
           {threads.map((th) => (
-            <button key={th.customer.id} onClick={() => setSel(th.customer.id)} className={`block w-full border-b p-3 text-left text-sm last:border-0 dark:border-slate-700 ${sel === th.customer.id ? 'bg-brand-light dark:bg-slate-700' : ''}`}>
+            <button key={th.customer.id} onClick={() => setSel(th.customer.id)} className={`block w-full border-b p-3 text-left text-sm transition last:border-0 hover:bg-brand-light dark:border-slate-700 dark:hover:bg-slate-700 ${sel === th.customer.id ? 'bg-brand-light dark:bg-slate-700' : ''}`}>
               <div className="flex justify-between"><b>{th.customer.name}</b>{th.unread > 0 && <span className="rounded-full bg-red-600 px-2 text-xs text-white">{th.unread}</span>}</div>
               <p className="truncate text-xs text-slate-500">{th.last.body}</p>
             </button>
@@ -40,6 +40,7 @@ export default function AdminMessages() {
         </div>
         {sel ? (
           <div className="card flex h-[32rem] flex-col">
+            <div className="border-b px-4 py-3 text-sm dark:border-slate-700"><b>{threads.find((thread) => thread.customer.id === sel)?.customer.name}</b><span className="ml-2 text-xs text-slate-500">{threads.find((thread) => thread.customer.id === sel)?.customer.email}</span></div>
             <div className="flex-1 space-y-2 overflow-y-auto p-4">
               {msgs.map((m) => (
                 <div key={m.id} className={`max-w-[80%] rounded-2xl px-3 py-2 text-sm ${m.fromStaff ? 'ml-auto bg-brand text-white' : 'bg-slate-100 dark:bg-slate-700'}`}>

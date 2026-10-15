@@ -27,9 +27,9 @@ export default function AdminAdmins() {
             <td className="td">{a.blocked ? 'Suspended' : 'Active'}</td><td className="td text-xs">{fmtDate(a.createdAt)}</td>
             <td className="td whitespace-nowrap text-right">
               {a.id !== user.id && a.role === 'ADMIN' && <>
-                <button className="mr-3 font-semibold text-brand" onClick={() => toggle(a)}>{a.blocked ? 'Reactivate' : 'Suspend'}</button>
-                <button className="mr-3 font-semibold text-brand" onClick={() => reset(a)}>Reset password</button>
-                <button className="text-red-600" onClick={() => del(a)}>{t('delete')}</button>
+                <button className={`${a.blocked ? 'btn-ghost' : 'btn-danger'} mr-2 !px-3 !py-1.5 text-xs`} onClick={() => toggle(a)}>{a.blocked ? 'Reactivate' : 'Suspend'}</button>
+                <button className="btn-ghost mr-2 !px-3 !py-1.5 text-xs" onClick={() => reset(a)}>Reset password</button>
+                <button className="btn-danger !px-3 !py-1.5 text-xs" onClick={() => del(a)}>{t('delete')}</button>
               </>}
             </td>
           </tr>))}
