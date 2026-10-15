@@ -100,8 +100,8 @@ r.delete('/products/:id', wrap(async (req, res) => {
   res.json({ ok: true });
 }));
 r.post('/categories', wrap(async (req, res) => {
-  const { name } = z.object({ name: z.string().min(2) }).parse(req.body);
-  res.json(await prisma.category.upsert({ where: { name }, update: {}, create: { name } }));
+  const { name, parentId } = z.object({ name: z.string().min(2), parentId: z.coerce.number().int().positive().nullable().optional() }).parse(req.body);
+  res.json(await prisma.category.upsert({ where: { name }, update: { parentId: parentId ?? null }, create: { name, parentId: parentId ?? null } }));
 }));
 
 /* ---- Support inbox ---- */

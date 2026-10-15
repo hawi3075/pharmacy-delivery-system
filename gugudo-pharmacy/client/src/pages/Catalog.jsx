@@ -5,9 +5,9 @@ import { useApp } from '../store';
 import ProductCard, { getRating } from '../components/ProductCard';
 
 const L = {
-  en: { home: 'Home', title: 'Medicines', sub: 'Find trusted medicines and everyday wellness essentials.', search: 'Search by name or ingredient', all: 'All medicines', sort: 'Sort', newest: 'Newest', top: 'Top rated', low: 'Price: low to high', high: 'Price: high to low', name: 'Name: A to Z', grid: 'Grid view', list: 'List view', count: 'medicines', forq: 'Results for', clear: 'Clear filters', none: 'No medicines match your search.', shop: 'Shop', help: 'Help', tag: 'Trusted medicines, delivered to your door.', rights: 'All rights reserved.', contact: 'Contact', about: 'About', support: 'Support', orders: 'My orders', wish: 'Wishlist' },
-  om: { home: 'Mana', title: 'Qorichoota', sub: 'Qorichoota amanamoo fi meeshaalee fayyaa guyyaa guyyaa argadhu.', search: 'Maqaa ykn dhangala’aan barbaadi', all: 'Qorichoota hunda', sort: 'Tartiiba', newest: 'Haaraa', top: 'Sadarkaa olaanaa', low: 'Gatii: gadi aanaa irraa', high: 'Gatii: ol aanaa irraa', name: 'Maqaa: A hanga Z', grid: 'Ilaalcha gabatee', list: 'Ilaalcha tarree', count: 'qorichoota', forq: 'Bu’aa', clear: 'Calaqqisiisa haqi', none: 'Qorichi barbaadde hin argamne.', shop: 'Gurgurtaa', help: 'Gargaarsa', tag: 'Qorichoota amanamoo, balbala keessanitti.', rights: 'Mirgi hunduu eegameera.', contact: 'Nu qunnamaa', about: 'Waa’ee keenya', support: 'Deeggarsa', orders: 'Ajajawwan koo', wish: 'Fedhii koo' },
-  am: { home: 'መነሻ', title: 'መድኃኒቶች', sub: 'የታመኑ መድኃኒቶችን እና የዕለት ተዕለት የጤና ምርቶችን ያግኙ።', search: 'በስም ወይም በንጥረ ነገር ይፈልጉ', all: 'ሁሉም መድኃኒቶች', sort: 'ደርድር', newest: 'አዲስ', top: 'ከፍተኛ ደረጃ', low: 'ዋጋ፡ ከዝቅተኛ ወደ ከፍተኛ', high: 'ዋጋ፡ ከከፍተኛ ወደ ዝቅተኛ', name: 'ስም፡ ከ A እስከ Z', grid: 'ፍርግርግ እይታ', list: 'ዝርዝር እይታ', count: 'መድኃኒቶች', forq: 'ውጤቶች ለ', clear: 'ማጣሪያዎችን አጽዳ', none: 'ከፍለጋዎ ጋር የሚዛመድ መድኃኒት የለም።', shop: 'ግዢ', help: 'እገዛ', tag: 'የታመኑ መድኃኒቶች፣ እስከ ደጃፍዎ።', rights: 'መብቱ በሕግ የተጠበቀ ነው።', contact: 'አግኙን', about: 'ስለ እኛ', support: 'ድጋፍ', orders: 'ትዕዛዞቼ', wish: 'ተወዳጆች' },
+  en: { home: 'Home', title: 'Products', sub: 'Explore pharmaceuticals, medical equipment, devices, and consumables.', search: 'Search products by name or ingredient', all: 'All products', sort: 'Sort', newest: 'Newest', top: 'Top rated', low: 'Price: low to high', high: 'Price: high to low', name: 'Name: A to Z', grid: 'Grid view', list: 'List view', count: 'products', forq: 'Results for', clear: 'Clear filters', none: 'No products match your search.', shop: 'Products', help: 'Help', tag: 'Quality healthcare products for institutions and families.', rights: 'All rights reserved.', contact: 'Contact', about: 'About', support: 'Support', orders: 'My orders', wish: 'Wishlist' },
+  om: { home: 'Mana', title: 'Oomishaalee', sub: 'Qorichoota, meeshaalee fayyaa, meeshaalee qorannoo fi wantoota fayyaa argadhu.', search: 'Maqaa ykn wanta barbaadi', all: 'Oomishaalee hunda', sort: 'Tartiiba', newest: 'Haaraa', top: 'Sadarkaa olaanaa', low: 'Gatii: gadi aanaa irraa', high: 'Gatii: ol aanaa irraa', name: 'Maqaa: A hanga Z', grid: 'Ilaalcha gabatee', list: 'Ilaalcha tarree', count: 'oomishaalee', forq: 'Bu’aa', clear: 'Calaqqisiisa haqi', none: 'Oomishni barbaadde hin argamne.', shop: 'Oomishaalee', help: 'Gargaarsa', tag: 'Oomishaalee fayyaa qulqulluu maamiltootaaf.', rights: 'Mirgi hunduu eegameera.', contact: 'Nu qunnamaa', about: 'Waa’ee keenya', support: 'Deeggarsa', orders: 'Ajajawwan koo', wish: 'Fedhii koo' },
+  am: { home: 'መነሻ', title: 'ምርቶች', sub: 'ፋርማሲዎችን፣ የሕክምና መሣሪያዎችን እና የሕክምና ፍጆታዎችን ያግኙ።', search: 'ምርትን በስም ወይም በንጥረ ነገር ይፈልጉ', all: 'ሁሉም ምርቶች', sort: 'ደርድር', newest: 'አዲስ', top: 'ከፍተኛ ደረጃ', low: 'ዋጋ፡ ከዝቅተኛ ወደ ከፍተኛ', high: 'ዋጋ፡ ከከፍተኛ ወደ ዝቅተኛ', name: 'ስም፡ ከ A እስከ Z', grid: 'ፍርግርግ እይታ', list: 'ዝርዝር እይታ', count: 'ምርቶች', forq: 'ውጤቶች ለ', clear: 'ማጣሪያዎችን አጽዳ', none: 'ከፍለጋዎ ጋር የሚዛመድ ምርት የለም።', shop: 'ምርቶች', help: 'እገዛ', tag: 'ለተቋማት እና ለቤተሰቦች ጥራት ያላቸው የጤና ምርቶች።', rights: 'መብቱ በሕግ የተጠበቀ ነው።', contact: 'አግኙን', about: 'ስለ እኛ', support: 'ድጋፍ', orders: 'ትዕዛዞቼ', wish: 'ተወዳጆች' },
 };
 
 const categoryVisuals = [
@@ -20,6 +20,7 @@ const categoryVisuals = [
 ];
 const defaultCategoryVisual = { icon: '✚', description: 'Trusted care, thoughtfully selected', image: 'https://images.unsplash.com/photo-1471864190281-a93a3070b6de?auto=format&fit=crop&w=700&q=80' };
 const getCategoryVisual = (name = '') => categoryVisuals.find((v) => name.toLowerCase().includes(v.match)) || defaultCategoryVisual;
+const flattenCategories = (categories) => categories.flatMap((category) => [category, ...(category.children || [])]);
 
 const Svg = ({ children }) => <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">{children}</svg>;
 
@@ -155,6 +156,7 @@ export default function Catalog() {
   const category = sp.get('category') || '';
   const sort = sp.get('sort') || 'newest';
   const view = sp.get('view') || 'grid';
+  const allCats = flattenCategories(cats);
 
   useEffect(() => { api('/categories').then(setCats).catch(() => {}); }, []);
   useEffect(() => {
@@ -210,7 +212,8 @@ export default function Catalog() {
           <div className="no-scrollbar grid auto-cols-[15rem] grid-flow-col gap-4 overflow-x-auto pb-3 md:grid-flow-row md:grid-cols-3 md:overflow-visible lg:grid-cols-4">
             {cats.map((c) => {
               const visual = getCategoryVisual(c.name);
-              const count = !q && !category && products ? products.filter((p) => String(p.categoryId ?? p.category?.id) === String(c.id)).length : null;
+              const categoryIds = [c.id, ...(c.children || []).map((child) => child.id)].map(String);
+              const count = !q && !category && products ? products.filter((p) => categoryIds.includes(String(p.categoryId ?? p.category?.id))).length : null;
               const active = String(c.id) === category;
               return (
                 <Link key={c.id} to={`/catalog?category=${c.id}`} className={`category-feature group relative h-52 overflow-hidden rounded-2xl ${active ? 'ring-2 ring-brand ring-offset-2' : ''}`}>
@@ -220,7 +223,8 @@ export default function Catalog() {
                     <span className="mb-2 grid h-9 w-9 place-items-center rounded-xl bg-white/20 text-lg backdrop-blur">{visual.icon}</span>
                     <h3 className="text-2xl">{c.name}</h3>
                     <p className="mt-1 text-xs text-white/75">{visual.description}</p>
-                    <p className="mt-3 text-xs font-bold text-[#b9f0dc]">{count === null ? 'Browse collection' : `${count} ${count === 1 ? 'medicine' : 'medicines'}`} <span className="ml-1 transition group-hover:ml-2">→</span></p>
+                    <p className="mt-3 text-xs font-bold text-[#b9f0dc]">{count === null ? 'Browse collection' : `${count} ${count === 1 ? 'product' : 'products'}`} <span className="ml-1 transition group-hover:ml-2">→</span></p>
+                    {c.children?.length > 0 && <p className="mt-1 text-[11px] text-white/60">{c.children.map((child) => child.name).join(' · ')}</p>}
                   </div>
                 </Link>
               );
@@ -234,10 +238,10 @@ export default function Catalog() {
         <div className="flex flex-wrap items-center gap-3">
           <div className="no-scrollbar flex min-w-0 flex-1 gap-2 overflow-x-auto py-0.5" role="group" aria-label="Categories">
             <button type="button" aria-pressed={!category} onClick={() => set('category', '')} className={chip(!category)}>{x('all')}</button>
-            {cats.map((c) => <button type="button" key={c.id} aria-pressed={String(c.id) === category} onClick={() => set('category', String(c.id))} className={chip(String(c.id) === category)}>{c.name}</button>)}
+            {allCats.map((c) => <button type="button" key={c.id} aria-pressed={String(c.id) === category} onClick={() => set('category', String(c.id))} className={chip(String(c.id) === category)}>{c.parentId ? `↳ ${c.name}` : c.name}</button>)}
           </div>
           <div className="flex shrink-0 items-center gap-2">
-            <CategoryMenu value={category} onChange={(v) => set('category', v)} cats={cats} x={x} />
+            <CategoryMenu value={category} onChange={(v) => set('category', v)} cats={allCats} x={x} />
             <SortMenu value={sort} onChange={(v) => set('sort', v === 'newest' ? '' : v)} x={x} />
             <ViewToggle value={view} onChange={(v) => set('view', v === 'grid' ? '' : v)} x={x} />
           </div>

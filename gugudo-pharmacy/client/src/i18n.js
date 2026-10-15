@@ -7,7 +7,7 @@ export const LANGS = [
 
 export const dict = {
   en: {
-    home: 'Home', catalog: 'Medicines', cart: 'Cart', orders: 'My orders', addresses: 'Addresses', support: 'Support',
+    home: 'Home', catalog: 'Products', cart: 'Cart', orders: 'My orders', addresses: 'Addresses', support: 'Support',
     login: 'Log in', register: 'Create account', logout: 'Log out', search: 'Search medicines',
     addToCart: 'Add to cart', outOfStock: 'Out of stock', rxRequired: 'Prescription required',
     total: 'Total', subtotal: 'Subtotal', delivery: 'Delivery', free: 'Free', checkout: 'Checkout', placeOrder: 'Place order',
@@ -27,7 +27,7 @@ export const dict = {
     savedAddresses: 'Saved addresses', useSaved: 'Use a saved address', orderHistory: 'Order history', cancelOrder: 'Cancel order',
   },
   om: {
-    home: 'Mana', catalog: 'Qorichoota', cart: 'Gaarii', orders: 'Ajajawwan koo', addresses: 'Teessoowwan', support: 'Deeggarsa',
+    home: 'Mana', catalog: 'Oomishaalee', cart: 'Gaarii', orders: 'Ajajawwan koo', addresses: 'Teessoowwan', support: 'Deeggarsa',
     login: 'Seeni', register: 'Herrega banadhu', logout: "Ba'i", search: 'Qorichoota barbaadi',
     addToCart: 'Gaarii keessa naqi', outOfStock: 'Dhume', rxRequired: 'Ajaja doktoraa barbaachisa',
     total: 'Waliigala', subtotal: 'Waliigala xiqqaa', delivery: "Geessa", free: 'Bilisa', checkout: 'Kaffalii', placeOrder: 'Ajaji',
@@ -47,7 +47,7 @@ export const dict = {
     savedAddresses: 'Teessoowwan olkaa’aman', useSaved: 'Teessoo olkaa’ame fayyadami', orderHistory: 'Seenaa ajajaa', cancelOrder: 'Ajaja haqi',
   },
   am: {
-    home: 'መነሻ', catalog: 'መድኃኒቶች', cart: 'ጋሪ', orders: 'ትዕዛዞቼ', addresses: 'አድራሻዎች', support: 'ድጋፍ',
+    home: 'መነሻ', catalog: 'ምርቶች', cart: 'ጋሪ', orders: 'ትዕዛዞቼ', addresses: 'አድራሻዎች', support: 'ድጋፍ',
     login: 'ግባ', register: 'መለያ ክፈት', logout: 'ውጣ', search: 'መድኃኒት ፈልግ',
     addToCart: 'ወደ ጋሪ ጨምር', outOfStock: 'አልቋል', rxRequired: 'የሐኪም ማዘዣ ያስፈልጋል',
     total: 'ጠቅላላ', subtotal: 'ንዑስ ድምር', delivery: 'ማድረሻ', free: 'ነፃ', checkout: 'ክፍያ ፈጽም', placeOrder: 'ትዕዛዝ አስገባ',

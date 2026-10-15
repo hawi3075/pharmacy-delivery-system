@@ -14,6 +14,7 @@ export default function AdminProducts() {
   const [aiPrompt, setAiPrompt] = useState('');
   const [err, setErr] = useState('');
   const [busy, setBusy] = useState(false);
+  const allCats = cats.flatMap((c) => [c, ...(c.children || [])]);
 
   const load = () => { api('/admin/products').then(setList); api('/categories').then(setCats); };
   useEffect(load, []);
@@ -41,7 +42,7 @@ export default function AdminProducts() {
     setBusy(true); setErr('');
     try {
       const d = await api('/ai/product-draft', { method: 'POST', body: { prompt: aiPrompt } });
-      const cat = cats.find((c) => c.name.toLowerCase() === (d.category || '').toLowerCase());
+      const cat = allCats.find((c) => c.name.toLowerCase() === (d.category || '').toLowerCase());
       setForm((f) => ({ ...f, name: d.name || f.name, generic: d.generic || f.generic, description: d.description || f.description, manufacturer: d.manufacturer || f.manufacturer, requiresRx: !!d.requiresRx, categoryId: cat?.id ?? f.categoryId }));
     } catch (e2) { setErr(e2.message); } finally { setBusy(false); }
   }
@@ -83,7 +84,7 @@ export default function AdminProducts() {
               <Field label="Generic name"><input className="input" value={form.generic || ''} onChange={set('generic')} /></Field>
               <Field label={`${t('price')} (ETB) *`}><input required type="number" step="0.01" min="0" className="input" value={form.price} onChange={set('price')} /></Field>
               <Field label={t('category')}>
-                <select className="input" value={form.categoryId} onChange={set('categoryId')}><option value="">—</option>{cats.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}</select>
+                <select className="input" value={form.categoryId} onChange={set('categoryId')}><option value="">—</option>{cats.map((c) => <optgroup key={c.id} label={c.name}><option value={c.id}>{c.name} (main category)</option>{(c.children || []).map((child) => <option key={child.id} value={child.id}>↳ {child.name}</option>)}</optgroup>)}</select>
               </Field>
               <Field label={t('stock')}><input type="number" min="0" className="input" value={form.stock} onChange={set('stock')} /></Field>
               <Field label="Low-stock alert at"><input type="number" min="0" className="input" value={form.lowStockAt} onChange={set('lowStockAt')} /></Field>

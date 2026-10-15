@@ -68,9 +68,12 @@ function CategoryMenu({ th, x, inline = false }) {
     <>
       <Link to="/catalog" className={`${item} !font-bold`} onClick={() => setOpen(false)}>{x('allMeds')}</Link>
       {cats.map((c) => (
-        <Link key={c.id} to={`/catalog?category=${c.id}`} className={item} onClick={() => setOpen(false)}>
-          {c.name}<span aria-hidden className="text-slate-300">›</span>
-        </Link>
+        <div key={c.id}>
+          <Link to={`/catalog?category=${c.id}`} className={item} onClick={() => setOpen(false)}>
+            {c.name}<span aria-hidden className="text-slate-300">›</span>
+          </Link>
+          {c.children?.map((child) => <Link key={child.id} to={`/catalog?category=${child.id}`} className={`${item} !pl-7 !text-xs !font-medium`} onClick={() => setOpen(false)}>↳ {child.name}</Link>)}
+        </div>
       ))}
     </>
   );

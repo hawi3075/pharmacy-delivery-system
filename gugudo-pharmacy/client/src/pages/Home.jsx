@@ -76,7 +76,7 @@ function CatTile({ c, i, big }) {
       <img src={catImages[i % catImages.length]} alt="" loading="lazy" className="absolute inset-0 h-full w-full object-cover transition duration-700 group-hover:scale-110" />
       <div className="absolute inset-0 bg-gradient-to-t from-[#102f2c]/90 via-[#102f2c]/25 to-transparent" />
       <div className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-2 p-5 text-white">
-        <h3 className={big ? 'text-3xl' : 'text-xl'}>{c.name}</h3>
+        <div><h3 className={big ? 'text-3xl' : 'text-xl'}>{c.name}</h3>{c.children?.length > 0 && <p className="mt-1 max-w-xs text-xs text-white/70">{c.children.slice(0, 3).map((child) => child.name).join(' · ')}</p>}</div>
         <span aria-hidden className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-white/20 backdrop-blur transition group-hover:bg-white group-hover:text-brand">↗</span>
       </div>
     </Link>
