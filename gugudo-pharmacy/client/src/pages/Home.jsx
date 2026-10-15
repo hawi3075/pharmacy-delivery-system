@@ -13,6 +13,7 @@ const catImages = [
   'https://images.unsplash.com/photo-1608248543803-ba4f8c70ae0b?auto=format&fit=crop&w=600&q=80',
   'https://images.unsplash.com/photo-1583947215259-38e31be8751f?auto=format&fit=crop&w=600&q=80',
 ];
+const MAIN_CATEGORIES = ['Pharmaceuticals', 'Medical Equipment & Devices', 'Medical Consumables', 'Wholesale & Institutional Supply Services'];
 
 function ShopCard({ p }) {
   const { t, addToCart } = useApp();
@@ -72,7 +73,7 @@ function SectionTitle({ eyebrow, title, link = '/catalog' }) {
 
 function CatTile({ c, i, big }) {
   return (
-    <Link to={`/catalog?category=${c.id}`} className={`group relative overflow-hidden rounded-3xl ${big ? 'col-span-2 row-span-2 min-h-[20rem]' : 'min-h-[10rem]'}`}>
+    <Link to={`/catalog?category=${encodeURIComponent(c.name)}`} className={`group relative overflow-hidden rounded-3xl ${big ? 'col-span-2 row-span-2 min-h-[20rem]' : 'min-h-[10rem]'}`}>
       <img src={catImages[i % catImages.length]} alt="" loading="lazy" className="absolute inset-0 h-full w-full object-cover transition duration-700 group-hover:scale-110" />
       <div className="absolute inset-0 bg-gradient-to-t from-[#102f2c]/90 via-[#102f2c]/25 to-transparent" />
       <div className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-2 p-5 text-white">
@@ -112,7 +113,7 @@ export default function Home() {
     api('/categories').then(setCats).catch(() => {});
   }, []);
 
-  const shown = cats.slice(0, 5);
+  const shown = cats.length ? cats.slice(0, 5) : MAIN_CATEGORIES.map((name) => ({ name }));
   const trending = [...products].sort((a, b) => b.id - a.id);
   const topRated = [...products].sort((a, b) => getRating(b) - getRating(a));
   const newest = [...products].sort((a, b) => b.id - a.id).slice(0, 4);

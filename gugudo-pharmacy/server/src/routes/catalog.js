@@ -14,9 +14,14 @@ r.get('/products', wrap(async (req, res) => {
   const where = { active: true };
   if (q) where.OR = [{ name: { contains: String(q), mode: 'insensitive' } }, { generic: { contains: String(q), mode: 'insensitive' } }];
   if (category) {
-    const selected = await prisma.category.findUnique({ where: { id: Number(category) }, include: { children: true } });
+    const value = String(category);
+    const selected = await prisma.category.findFirst({
+      where: Number.isNaN(Number(value)) ? { name: value } : { id: Number(value) },
+      include: { children: true },
+    });
     if (selected?.children?.length) where.categoryId = { in: [selected.id, ...selected.children.map((child) => child.id)] };
-    else where.categoryId = Number(category);
+    else if (selected) where.categoryId = selected.id;
+    else where.categoryId = -1;
   }
   if (rx === 'true') where.requiresRx = true;
   res.json(await prisma.product.findMany({ where, include: { category: true }, orderBy: { name: 'asc' }, take: 100 }));

@@ -21,6 +21,7 @@ const categoryVisuals = [
 const defaultCategoryVisual = { icon: '✚', description: 'Trusted care, thoughtfully selected', image: 'https://images.unsplash.com/photo-1471864190281-a93a3070b6de?auto=format&fit=crop&w=700&q=80' };
 const getCategoryVisual = (name = '') => categoryVisuals.find((v) => name.toLowerCase().includes(v.match)) || defaultCategoryVisual;
 const flattenCategories = (categories) => categories.flatMap((category) => [category, ...(category.children || [])]);
+const MAIN_CATEGORIES = ['Pharmaceuticals', 'Medical Equipment & Devices', 'Medical Consumables', 'Wholesale & Institutional Supply Services'];
 
 const Svg = ({ children }) => <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">{children}</svg>;
 
@@ -68,7 +69,7 @@ function CategoryMenu({ value, onChange, cats, x }) {
     document.addEventListener('mousedown', h);
     return () => document.removeEventListener('mousedown', h);
   }, []);
-  const current = cats.find((c) => String(c.id) === value);
+  const current = cats.find((c) => String(c.id) === value || c.name === value);
   return (
     <div className="relative" ref={ref} onKeyDown={(e) => e.key === 'Escape' && setOpen(false)}>
       <button type="button" aria-haspopup="listbox" aria-expanded={open} onClick={() => setOpen(!open)}
@@ -156,7 +157,8 @@ export default function Catalog() {
   const category = sp.get('category') || '';
   const sort = sp.get('sort') || 'newest';
   const view = sp.get('view') || 'grid';
-  const allCats = flattenCategories(cats);
+  const visibleCats = cats.length ? cats : MAIN_CATEGORIES.map((name) => ({ name }));
+  const allCats = flattenCategories(visibleCats);
 
   useEffect(() => { api('/categories').then(setCats).catch(() => {}); }, []);
   useEffect(() => {
@@ -210,13 +212,13 @@ export default function Catalog() {
             <p className="hidden max-w-xs text-right text-sm leading-6 text-slate-500 md:block">From daily vitamins to first aid, discover trusted essentials in one place.</p>
           </div>
           <div className="no-scrollbar grid auto-cols-[15rem] grid-flow-col gap-4 overflow-x-auto pb-3 md:grid-flow-row md:grid-cols-3 md:overflow-visible lg:grid-cols-4">
-            {cats.map((c) => {
+            {visibleCats.map((c) => {
               const visual = getCategoryVisual(c.name);
               const categoryIds = [c.id, ...(c.children || []).map((child) => child.id)].map(String);
               const count = !q && !category && products ? products.filter((p) => categoryIds.includes(String(p.categoryId ?? p.category?.id))).length : null;
               const active = String(c.id) === category;
               return (
-                <Link key={c.id} to={`/catalog?category=${c.id}`} className={`category-feature group relative h-52 overflow-hidden rounded-2xl ${active ? 'ring-2 ring-brand ring-offset-2' : ''}`}>
+                <Link key={c.id || c.name} to={`/catalog?category=${encodeURIComponent(c.name)}`} className={`category-feature group relative h-52 overflow-hidden rounded-2xl ${active ? 'ring-2 ring-brand ring-offset-2' : ''}`}>
                   <img src={visual.image} alt="" loading="lazy" className="absolute inset-0 h-full w-full object-cover transition duration-700 group-hover:scale-110" />
                   <div className="absolute inset-0 bg-gradient-to-t from-[#102f2c]/95 via-[#102f2c]/25 to-transparent" />
                   <div className="absolute inset-x-0 bottom-0 p-5 text-white">
@@ -238,7 +240,7 @@ export default function Catalog() {
         <div className="flex flex-wrap items-center gap-3">
           <div className="no-scrollbar flex min-w-0 flex-1 gap-2 overflow-x-auto py-0.5" role="group" aria-label="Categories">
             <button type="button" aria-pressed={!category} onClick={() => set('category', '')} className={chip(!category)}>{x('all')}</button>
-            {allCats.map((c) => <button type="button" key={c.id} aria-pressed={String(c.id) === category} onClick={() => set('category', String(c.id))} className={chip(String(c.id) === category)}>{c.parentId ? `↳ ${c.name}` : c.name}</button>)}
+            {allCats.map((c) => <button type="button" key={c.id || c.name} aria-pressed={String(c.id) === category || c.name === category} onClick={() => set('category', c.id ? String(c.id) : c.name)} className={chip(String(c.id) === category || c.name === category)}>{c.parentId ? `↳ ${c.name}` : c.name}</button>)}
           </div>
           <div className="flex shrink-0 items-center gap-2">
             <CategoryMenu value={category} onChange={(v) => set('category', v)} cats={allCats} x={x} />

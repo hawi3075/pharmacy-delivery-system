@@ -8,6 +8,7 @@ import { api } from '../api';
 /* ============ EASY SETTINGS ============ */
 const NAV_THEME = 'white'; // 'white' (clean, like your Figma) or 'teal' (solid brand colour)
 const ROUTES = { about: '/about', contact: '/contact', wishlist: '/wishlist' };
+const MAIN_CATEGORIES = ['Pharmaceuticals', 'Medical Equipment & Devices', 'Medical Consumables', 'Wholesale & Institutional Supply Services'];
 /* ======================================= */
 
 const THEMES = {
@@ -31,9 +32,9 @@ const THEMES = {
 
 // Labels this navbar adds itself, so no other file needs editing.
 const EXTRA = {
-  en: { wishlist: 'Wishlist', about: 'About', contact: 'Contact', signInUp: 'Log in / Sign up', categories: 'Categories', allMeds: 'All medicines' },
-  om: { wishlist: 'Fedhii koo', about: 'Waa’ee keenya', contact: 'Nu qunnamaa', signInUp: "Seeni / Galmaa'i", categories: 'Gosoota', allMeds: 'Qorichoota hunda' },
-  am: { wishlist: 'ተወዳጆች', about: 'ስለ እኛ', contact: 'አግኙን', signInUp: 'ግባ / ተመዝገብ', categories: 'ምድቦች', allMeds: 'ሁሉም መድኃኒቶች' },
+  en: { wishlist: 'Wishlist', about: 'About', contact: 'Contact', signInUp: 'Log in / Sign up', categories: 'Categories', allMeds: 'All products' },
+  om: { wishlist: 'Fedhii koo', about: 'Waa’ee keenya', contact: 'Nu qunnamaa', signInUp: "Seeni / Galmaa'i", categories: 'Gosoota', allMeds: 'Oomishaalee hunda' },
+  am: { wishlist: 'ተወዳጆች', about: 'ስለ እኛ', contact: 'አግኙን', signInUp: 'ግባ / ተመዝገብ', categories: 'ምድቦች', allMeds: 'ሁሉም ምርቶች' },
 };
 
 const Svg = ({ children }) => (
@@ -59,7 +60,7 @@ function CategoryMenu({ th, x, inline = false }) {
   const [open, setOpen] = useState(false);
   const ref = useOutside(() => setOpen(false));
   const timer = useRef(null);
-  useEffect(() => { api('/categories').then(setCats).catch(() => {}); }, []);
+  useEffect(() => { api('/categories').then((data) => setCats(data.length ? data : MAIN_CATEGORIES.map((name) => ({ name })))).catch(() => setCats(MAIN_CATEGORIES.map((name) => ({ name })))); }, []);
   const show = () => { clearTimeout(timer.current); setOpen(true); };
   const hide = () => { timer.current = setTimeout(() => setOpen(false), 160); };
   const item = 'flex w-full items-center justify-between rounded-lg px-3 py-2.5 text-left text-sm font-semibold text-slate-700 transition hover:bg-brand-light hover:text-brand dark:text-slate-200 dark:hover:bg-slate-700';
@@ -69,10 +70,9 @@ function CategoryMenu({ th, x, inline = false }) {
       <Link to="/catalog" className={`${item} !font-bold`} onClick={() => setOpen(false)}>{x('allMeds')}</Link>
       {cats.map((c) => (
         <div key={c.id}>
-          <Link to={`/catalog?category=${c.id}`} className={item} onClick={() => setOpen(false)}>
+          <Link to={`/catalog?category=${encodeURIComponent(c.name)}`} className={item} onClick={() => setOpen(false)}>
             {c.name}<span aria-hidden className="text-slate-300">›</span>
           </Link>
-          {c.children?.map((child) => <Link key={child.id} to={`/catalog?category=${child.id}`} className={`${item} !pl-7 !text-xs !font-medium`} onClick={() => setOpen(false)}>↳ {child.name}</Link>)}
         </div>
       ))}
     </>
