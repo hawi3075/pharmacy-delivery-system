@@ -43,6 +43,8 @@ npm run dev                 # http://localhost:5173
 
 **Change these passwords before going live.**
 
+To send customer order-status emails, configure `SMTP_HOST`, `SMTP_PORT`, `SMTP_SECURE`, `SMTP_USER`, `SMTP_PASSWORD`, and optionally `SMTP_FROM` in `server/.env`.
+
 ### Google Maps
 Create a key in Google Cloud Console and enable **Maps JavaScript API** and **Geocoding API**. Put it in `client/.env` as `VITE_GOOGLE_MAPS_KEY`. Restrict the key to your domain.
 
