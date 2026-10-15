@@ -3,6 +3,7 @@ import { z } from 'zod';
 import { prisma, wrap, audit } from '../db.js';
 import { staff } from '../middleware/auth.js';
 import { upload, fileUrl } from '../upload.js';
+import { sendOrderStatusEmail } from '../email.js';
 
 const r = Router();
 r.use(...staff);
@@ -27,7 +28,7 @@ r.get('/stats', wrap(async (_req, res) => {
   res.json({
     orders, pending, customers,
     revenue: paid._sum.total || 0,
-    lowStock: products.filter((p) => p.stock <= p.lowStockAt).length,
+    lowStock: products.filter((p) => p.stock > 0 && p.stock < 5).length,
     outOfStock: products.filter((p) => p.stock === 0).length,
     recent, byDay,
   });
@@ -54,6 +55,9 @@ r.patch('/orders/:id', wrap(async (req, res) => {
   if (d.status === 'CANCELLED' && o.status !== 'CANCELLED')
     ops.push(...o.items.map((i) => prisma.product.update({ where: { id: i.productId }, data: { stock: { increment: i.qty } } })));
   await prisma.$transaction(ops);
+  if (d.status && d.status !== o.status) {
+    sendOrderStatusEmail({ ...o, status: d.status }).catch((error) => console.error('Order status email failed:', error.message));
+  }
   audit(req.user.id, 'ORDER_UPDATE', `${o.code} -> ${JSON.stringify(data)}`);
   res.json({ ok: true });
 }));
@@ -67,7 +71,7 @@ const productBody = (b, file) => {
   for (const k of ['name', 'generic', 'description', 'batchNo', 'manufacturer']) if (b[k] !== undefined) d[k] = b[k] || null;
   if (b.price !== undefined) d.price = Number(b.price);
   if (b.stock !== undefined) d.stock = parseInt(b.stock, 10) || 0;
-  if (b.lowStockAt !== undefined) d.lowStockAt = parseInt(b.lowStockAt, 10) || 10;
+  d.lowStockAt = 5;
   if (b.requiresRx !== undefined) d.requiresRx = b.requiresRx === 'true' || b.requiresRx === true;
   if (b.active !== undefined) d.active = b.active === 'true' || b.active === true;
   if (b.categoryId !== undefined) d.categoryId = b.categoryId ? Number(b.categoryId) : null;
@@ -102,6 +106,16 @@ r.delete('/products/:id', wrap(async (req, res) => {
 r.post('/categories', wrap(async (req, res) => {
   const { name, parentId } = z.object({ name: z.string().min(2), parentId: z.coerce.number().int().positive().nullable().optional() }).parse(req.body);
   res.json(await prisma.category.upsert({ where: { name }, update: { parentId: parentId ?? null }, create: { name, parentId: parentId ?? null } }));
+}));
+
+r.get('/reviews', wrap(async (_req, res) => res.json(await prisma.review.findMany({
+  include: { customer: { select: { id: true, name: true, email: true } }, product: { select: { id: true, name: true } } },
+  orderBy: { createdAt: 'desc' },
+}))));
+r.delete('/reviews/:id', wrap(async (req, res) => {
+  await prisma.review.delete({ where: { id: Number(req.params.id) } });
+  audit(req.user.id, 'REVIEW_DELETE', req.params.id);
+  res.json({ ok: true });
 }));
 
 /* ---- Support inbox ---- */

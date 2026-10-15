@@ -28,7 +28,10 @@ r.get('/products', wrap(async (req, res) => {
 }));
 
 r.get('/products/:id', wrap(async (req, res) => {
-  const p = await prisma.product.findFirst({ where: { id: Number(req.params.id), active: true }, include: { category: true } });
+  const p = await prisma.product.findFirst({
+    where: { id: Number(req.params.id), active: true },
+    include: { category: true, reviews: { include: { customer: { select: { name: true } } }, orderBy: { createdAt: 'desc' } } },
+  });
   if (!p) return res.status(404).json({ error: 'Product not found' });
   res.json(p);
 }));
