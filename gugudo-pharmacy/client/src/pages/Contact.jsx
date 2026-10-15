@@ -26,9 +26,9 @@ export default function Contact() {
     <div className="mx-auto max-w-6xl pb-10">
       <section className="relative overflow-hidden rounded-[2rem] bg-[#e6f6f8] px-7 py-12 md:px-14 md:py-16">
         <div className="relative z-10 max-w-2xl">
-          <p className="text-xs font-extrabold uppercase tracking-[0.25em] text-brand">Let’s talk</p>
-          <h1 className="mt-3 text-5xl leading-tight text-[#173f3b] md:text-7xl">Your question has a home.</h1>
-          <p className="mt-5 max-w-xl text-base leading-7 text-[#52625b]">Need help choosing a medicine, checking an order, or understanding delivery? Send our team a message and we’ll get back to you with care.</p>
+          <p className="text-xs font-extrabold uppercase tracking-[0.25em] text-brand">Partner with Gugudo</p>
+          <h1 className="mt-3 text-5xl leading-tight text-[#173f3b] md:text-7xl">Let’s build a stronger supply chain.</h1>
+          <p className="mt-5 max-w-xl text-base leading-7 text-[#52625b]">For wholesale orders, institutional supply, tender participation, or product questions, our Hawassa team is ready to help.</p>
         </div>
         <div className="contact-art absolute -right-4 -top-10 hidden h-72 w-80 md:block" aria-hidden>
           <span className="contact-art__circle" />
@@ -38,7 +38,7 @@ export default function Contact() {
       </section>
 
       <div className="mt-6 grid gap-5 md:grid-cols-3">
-        {[['◷', 'Open hours', 'Monday – Saturday', '8:00 AM – 8:00 PM'], ['✆', 'Call us', '+251 911 234 567', 'We’re happy to help.'], ['✉', 'Fastest reply', 'Send us a message', 'Our team will respond in support.']].map(([icon, title, line, detail]) => (
+        {[['✉', 'Email us', 'gugudopharma27@gmail.com', 'For quotations and partnerships.'], ['✆', 'WhatsApp', '0916 853 543', 'Call or message our team.'], ['➤', 'Telegram', '0950 477 994', 'Connect with Gugudo Pharma.']].map(([icon, title, line, detail]) => (
           <div className="card p-6" key={title}><p className="text-2xl text-brand">{icon}</p><h2 className="mt-4 text-2xl">{title}</h2><p className="mt-2 text-sm leading-7 text-slate-500">{line}<br />{detail}</p></div>
         ))}
       </div>
@@ -67,12 +67,12 @@ export default function Contact() {
           )}
         </div>
         <div className="rounded-[1.5rem] bg-[#173f3b] p-7 text-white md:p-8">
-          <p className="text-xs font-extrabold uppercase tracking-[0.2em] text-[#b9f0dc]">Here for your care</p>
-          <h2 className="mt-3 text-3xl">A calmer way to get support.</h2>
-          <p className="mt-4 text-sm leading-7 text-white/70">Your message goes to the same pharmacy support team that helps with orders, products, and delivery updates.</p>
+          <p className="text-xs font-extrabold uppercase tracking-[0.2em] text-[#b9f0dc]">Institutional supply</p>
+          <h2 className="mt-3 text-3xl">A practical partner for procurement teams.</h2>
+          <p className="mt-4 text-sm leading-7 text-white/70">We support bulk orders, tender participation, scheduled replenishment, and dependable delivery for healthcare providers.</p>
           <div className="mt-8 grid gap-4 text-sm">
-            <div className="rounded-2xl bg-white/10 p-4"><b>Product guidance</b><p className="mt-1 text-white/60">Ask about everyday essentials and pharmacist-approved care.</p></div>
-            <div className="rounded-2xl bg-white/10 p-4"><b>Order support</b><p className="mt-1 text-white/60">We can help you follow an order from checkout to doorstep.</p></div>
+            <div className="rounded-2xl bg-white/10 p-4"><b>Wholesale quotations</b><p className="mt-1 text-white/60">Tell us what your facility needs and we’ll help shape the right order.</p></div>
+            <div className="rounded-2xl bg-white/10 p-4"><b>Quality & compliance</b><p className="mt-1 text-white/60">Ask about sourcing, storage, cold-chain handling, and product documentation.</p></div>
             <Link to="/support" className="font-bold text-[#b9f0dc] hover:text-white">Open your support inbox →</Link>
           </div>
         </div>

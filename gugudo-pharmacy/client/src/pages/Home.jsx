@@ -139,13 +139,17 @@ export default function Home() {
         <span className="blob -left-10 top-10 h-64 w-64 bg-[#0e6f7e]/30" />
         <span className="blob -bottom-16 right-1/3 h-72 w-72 bg-[#7fd6c2]/40" style={{ animationDelay: '-7s' }} />
         <div className="relative z-10 max-w-xl">
-          <p className="hero-in mb-4 text-sm font-bold text-brand" style={hi(0)}>Your health, thoughtfully delivered</p>
+          <p className="hero-in mb-4 text-sm font-bold uppercase tracking-[0.18em] text-brand" style={hi(0)}>Gugudo Pharma · Hawassa, Ethiopia</p>
           <h1 className="hero-in text-5xl leading-[1.04] text-[#173f3b] dark:text-white md:text-7xl" style={hi(100)}>{t('welcomeTitle')}</h1>
           <p className="hero-in mt-5 max-w-lg text-base leading-7 text-[#52625b] dark:text-slate-300" style={hi(220)}>{t('welcomeSub')}</p>
           <form className="hero-in mt-8 flex max-w-xl gap-2 rounded-full bg-white p-2 shadow-xl dark:bg-slate-900" style={hi(340)} onSubmit={(e) => { e.preventDefault(); nav('/catalog?q=' + encodeURIComponent(q)); }}>
             <input className="input !rounded-full border-0 shadow-none" placeholder={t('search')} value={q} onChange={(e) => setQ(e.target.value)} aria-label={t('search')} />
             <button className="btn shrink-0">{t('search')}</button>
           </form>
+          <div className="hero-in mt-4 flex flex-wrap gap-3" style={hi(400)}>
+            <Link to="/catalog" className="btn">Explore our products →</Link>
+            <Link to="/contact" className="btn-ghost">Partner with us</Link>
+          </div>
           <div className="hero-in mt-5 flex flex-wrap gap-2" style={hi(460)}>
             {cats.slice(0, 4).map((c) => <Link key={c.id} to={`/catalog?category=${c.id}`} className="rounded-full border border-brand/20 bg-white/70 px-4 py-2 text-sm font-bold text-[#207065] transition hover:bg-white dark:bg-slate-900/60">{c.name}</Link>)}
           </div>
@@ -164,7 +168,7 @@ export default function Home() {
       {/* Trust bar */}
       <Reveal>
         <div className="card grid divide-y divide-[#e5e4dc] dark:divide-slate-700 md:grid-cols-3 md:divide-x md:divide-y-0">
-          {[['◷', 'Always here to help', 'Message our pharmacists any time'], ['✦', 'Find care in a few taps', 'Clear categories, simple search'], ['✓', 'Secure checkout', 'Your privacy is always protected']].map(([icon, title, text]) => (
+          {[['✓', 'Quality assurance', 'Carefully sourced products and responsible handling'], ['◷', 'Fast regional delivery', 'Dependable supply across Hawassa and Southern Ethiopia'], ['✦', 'Institutional pricing', 'Practical wholesale support for healthcare providers']].map(([icon, title, text]) => (
             <div key={title} className="flex items-center gap-4 p-5">
               <span className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-brand-light text-lg text-brand dark:bg-slate-700">{icon}</span>
               <div><h3 className="text-lg">{title}</h3><p className="text-sm text-slate-500">{text}</p></div>
@@ -282,10 +286,10 @@ export default function Home() {
       </Reveal>
 
       <footer className="grid gap-8 border-t border-[#e5e4dc] py-10 dark:border-slate-700 md:grid-cols-4">
-        <div><Link to="/" className="text-2xl font-bold text-[#207065]" style={{ fontFamily: "'DM Serif Display', serif" }}>Gugudo</Link><p className="mt-3 text-sm leading-6 text-slate-500">Thoughtful health essentials, delivered with care.</p></div>
-        <div><h3 className="text-lg">Shop</h3><div className="mt-3 grid gap-2 text-sm text-slate-500"><Link to="/catalog">All products</Link><Link to="/orders">My orders</Link></div></div>
-        <div><h3 className="text-lg">Help</h3><div className="mt-3 grid gap-2 text-sm text-slate-500"><Link to="/support">Contact support</Link><Link to="/addresses">Saved addresses</Link></div></div>
-        <div><h3 className="text-lg">Your health, our care</h3><p className="mt-3 text-sm leading-6 text-slate-500">Secure checkout and friendly support whenever you need it.</p></div>
+        <div><Link to="/" className="text-2xl font-bold text-[#207065]" style={{ fontFamily: "'DM Serif Display', serif" }}>Gugudo</Link><p className="mt-3 text-sm leading-6 text-slate-500">Safe, reliable pharmaceutical and medical equipment supply for a healthier Southern Ethiopia.</p></div>
+        <div><h3 className="text-lg">Products</h3><div className="mt-3 grid gap-2 text-sm text-slate-500"><Link to="/catalog">Browse products</Link><Link to="/about">Our services</Link></div></div>
+        <div><h3 className="text-lg">Partner with us</h3><div className="mt-3 grid gap-2 text-sm text-slate-500"><Link to="/contact">Request a quotation</Link><Link to="/contact">Institutional supply</Link></div></div>
+        <div><h3 className="text-lg">Contact Gugudo</h3><div className="mt-3 grid gap-2 text-sm text-slate-500"><a href="mailto:gugudopharma27@gmail.com">gugudopharma27@gmail.com</a><a href="tel:+251916853543">WhatsApp: 0916 853 543</a><a href="https://t.me/0950477994" target="_blank" rel="noreferrer">Telegram: 0950 477 994</a></div></div>
       </footer>
     </div>
   );
