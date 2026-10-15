@@ -61,19 +61,6 @@ function Reveal({ children, delay = 0, className = '' }) {
   return <div ref={ref} style={{ transitionDelay: `${delay}ms` }} className={`reveal ${seen ? 'is-in' : ''} ${className}`}>{children}</div>;
 }
 
-function CountUp({ to, suffix = '', decimals = 0 }) {
-  const [ref, seen] = useInView();
-  const [v, setV] = useState(0);
-  useEffect(() => {
-    if (!seen) return;
-    let raf, t0;
-    const step = (t) => { t0 ??= t; const p = Math.min((t - t0) / 1400, 1); setV(to * (1 - Math.pow(1 - p, 3))); if (p < 1) raf = requestAnimationFrame(step); };
-    raf = requestAnimationFrame(step);
-    return () => cancelAnimationFrame(raf);
-  }, [seen, to]);
-  return <span ref={ref}>{v.toFixed(decimals)}{suffix}</span>;
-}
-
 function SectionTitle({ eyebrow, title, link = '/catalog' }) {
   return (
     <div className="mb-6 flex items-end justify-between gap-4">
@@ -130,8 +117,6 @@ export default function Home() {
   const topRated = [...products].sort((a, b) => getRating(b) - getRating(a));
   const newest = [...products].sort((a, b) => b.id - a.id).slice(0, 4);
   const hi = (ms) => ({ animationDelay: `${ms}ms` });
-  const marquee = ['Licensed pharmacists', 'Cold-chain delivery', 'Pay on arrival', 'Prescription checked', 'Secure checkout'];
-
   return (
     <div className="space-y-20">
       {/* Hero */}
@@ -157,10 +142,10 @@ export default function Home() {
         <div className="hero-in relative mt-10 md:absolute md:right-8 md:top-8 md:mt-0 md:w-[43%]" style={hi(250)}>
           <img src={heroImage} alt="Pharmacist arranging trusted medicines" className="h-72 w-full rounded-[1.75rem] object-cover shadow-2xl md:h-[27rem]" />
           <div className="float absolute -bottom-5 -left-4 rounded-2xl bg-white p-4 shadow-xl dark:bg-slate-900">
-            <Stars value={4.9} size="text-base" /><p className="mt-1 text-xs font-bold text-slate-500">Loved by customers</p>
+            <p className="text-sm font-extrabold text-brand">Quality supply</p><p className="mt-1 text-xs font-bold text-slate-500">For healthcare providers</p>
           </div>
           <div className="float absolute -right-3 top-6 hidden rounded-2xl bg-white px-4 py-3 shadow-xl dark:bg-slate-900 md:block" style={{ animationDelay: '-3s' }}>
-            <p className="text-sm font-extrabold text-brand">Fast delivery</p><p className="text-xs text-slate-500">Cold-chain safe</p>
+            <p className="text-sm font-extrabold text-brand">Cold-chain ready</p><p className="text-xs text-slate-500">Careful storage and delivery</p>
           </div>
         </div>
       </section>
@@ -180,7 +165,7 @@ export default function Home() {
       {/* Categories: one large tile leads, the rest follow */}
       {shown.length > 0 && (
         <Reveal><section>
-          <SectionTitle eyebrow="Explore care" title="Shop by category" />
+          <SectionTitle eyebrow="Our product range" title="Pharmaceuticals and medical supplies" />
           <div className="grid grid-cols-2 gap-4 md:grid-cols-4 md:grid-rows-2">
             {shown.map((c, i) => <CatTile key={c.id} c={c} i={i} big={i === 0} />)}
           </div>
@@ -201,11 +186,11 @@ export default function Home() {
           <span className="blob -right-10 -top-10 h-60 w-60 bg-[#0e6f7e]" />
           <div className="relative flex flex-wrap items-center justify-between gap-6">
             <div>
-              <p className="text-sm font-extrabold uppercase tracking-[0.2em] text-[#7fd6c2]">Special offer</p>
-              <h2 className="mt-2 max-w-xl text-3xl md:text-4xl">Free delivery on orders over ETB 1,000</h2>
-              <p className="mt-2 text-white/70">Save more on everyday care while supplies last. Pay in cash when your medicines arrive.</p>
+              <p className="text-sm font-extrabold uppercase tracking-[0.2em] text-[#7fd6c2]">Wholesale and institutional supply</p>
+              <h2 className="mt-2 max-w-xl text-3xl md:text-4xl">The right products for your facility.</h2>
+              <p className="mt-2 text-white/70">We support bulk orders, tender participation, and scheduled replenishment for hospitals, clinics, pharmacies, and NGOs.</p>
             </div>
-            <Link to="/catalog" className="btn !bg-white !px-7 !py-3 !text-[#173f3b] hover:!bg-[#e6f6f8]">Start shopping</Link>
+            <Link to="/contact" className="btn !bg-white !px-7 !py-3 !text-[#173f3b] hover:!bg-[#e6f6f8]">Request a quotation</Link>
           </div>
         </section>
       </Reveal>
@@ -223,7 +208,7 @@ export default function Home() {
       {/* Top rated */}
       {topRated.length > 0 && (
         <Reveal><section>
-          <SectionTitle eyebrow="Trusted by our community" title="Top rated products" />
+          <SectionTitle eyebrow="Quality products" title="Products selected for reliable care" />
           <Carousel items={topRated} />
         </section></Reveal>
       )}
@@ -231,17 +216,17 @@ export default function Home() {
       {/* Marquee */}
       <div className="overflow-hidden rounded-full bg-[#e6f6f8] py-4 text-[#173f3b] dark:bg-slate-800 dark:text-white" aria-hidden>
         <div className="ticker-track flex w-max gap-10 text-sm font-bold">
-          {[...marquee, ...marquee, ...marquee, ...marquee].map((m, i) => <span key={i} className="flex items-center gap-10">{m}<span className="text-amber-400">★</span></span>)}
+          {['Quality pharmaceuticals', 'Medical equipment', 'Medical consumables', 'Institutional supply', 'Southern Ethiopia delivery', 'EFDA-aware handling'].concat(['Quality pharmaceuticals', 'Medical equipment', 'Medical consumables', 'Institutional supply', 'Southern Ethiopia delivery', 'EFDA-aware handling']).map((m, i) => <span key={i} className="flex items-center gap-10">{m}<span className="text-amber-400">★</span></span>)}
         </div>
       </div>
 
       {/* How it works */}
       <Reveal>
         <section>
-          <SectionTitle eyebrow="Simple by design" title="How it works" />
+          <SectionTitle eyebrow="Work with Gugudo" title="A clear supply process" />
           <div className="relative grid gap-10 md:grid-cols-3">
             <div className="absolute left-[16%] right-[16%] top-6 hidden border-t-2 border-dashed border-brand/30 md:block" />
-            {[['1', 'Find what you need', 'Browse trusted products or search by name.'], ['2', 'Order with confidence', 'Upload a prescription if needed and check out.'], ['3', 'Care arrives at your door', 'Track your order and pay when it arrives.']].map(([n, title, text]) => (
+            {[['1', 'Tell us your needs', 'Share the products, quantities, and delivery schedule your facility requires.'], ['2', 'Receive a clear quotation', 'Our team will help confirm availability, pricing, and product details.'], ['3', 'Build a dependable supply', 'We coordinate delivery and ongoing replenishment for your organization.']].map(([n, title, text]) => (
               <div key={n} className="relative text-center">
                 <span className="relative mx-auto grid h-12 w-12 place-items-center rounded-full bg-brand text-lg font-bold text-white shadow-lg">{n}</span>
                 <h3 className="mt-4 text-2xl">{title}</h3>
@@ -252,28 +237,26 @@ export default function Home() {
         </section>
       </Reveal>
 
-      {/* Numbers (replace with your real figures) */}
       <Reveal>
-        <section className="grid gap-px overflow-hidden rounded-[2rem] bg-[#207065] text-white md:grid-cols-4">
-          {[[4.9, '/5', 1, 'Average rating'], [12, 'k+', 0, 'Happy customers'], [98, '%', 0, 'On-time delivery'], [24, '/7', 0, 'Care support']].map(([to, suffix, d, label]) => (
-            <div key={label} className="px-6 py-10 text-center">
-              <p className="text-5xl" style={{ fontFamily: "'DM Serif Display', serif" }}><CountUp to={to} suffix={suffix} decimals={d} /></p>
-              <p className="mt-2 text-sm font-bold text-white/70">{label}</p>
-            </div>
-          ))}
+        <section className="rounded-[2rem] bg-[#207065] px-7 py-10 text-white md:px-14 md:py-12">
+          <p className="text-sm font-extrabold uppercase tracking-[0.2em] text-[#b9f0dc]">Who we serve</p>
+          <h2 className="mt-2 text-3xl md:text-4xl">Supporting the people who deliver care.</h2>
+          <div className="mt-7 grid gap-4 sm:grid-cols-2 md:grid-cols-4">
+            {['Hospitals', 'Clinics', 'Pharmacies', 'NGOs and health programs'].map((audience) => <div key={audience} className="rounded-2xl bg-white/10 p-4 text-lg font-bold">{audience}</div>)}
+          </div>
         </section>
       </Reveal>
 
       {/* Why choose us */}
       <Reveal>
         <section className="rounded-[2rem] bg-[#f1eee5] px-7 py-10 dark:bg-slate-800 md:px-14 md:py-12">
-          <SectionTitle eyebrow="The Gugudo difference" title="Why choose Gugudo?" link="/about" />
+          <SectionTitle eyebrow="Why Gugudo?" title="A reliable partner for better healthcare supply" link="/about" />
           <div className="grid gap-4 md:grid-cols-4">
             {[
-              ['✦', 'Pharmacist approved', 'Every product is selected with your wellbeing in mind.'],
-              ['✓', 'Quality you can trust', 'Reliable medicines and essentials from verified sources.'],
-              ['◷', 'Delivery that fits you', 'Fast, careful delivery with pay-on-arrival convenience.'],
-              ['♡', 'Care that feels human', 'Friendly support whenever you need help choosing.'],
+              ['✦', 'Broad product range', 'Pharmaceuticals, equipment, diagnostic devices, and consumables.'],
+              ['✓', 'Quality and safety', 'Responsible sourcing, storage, and handling for every product.'],
+              ['◷', 'Reliable logistics', 'Regional delivery and replenishment support you can plan around.'],
+              ['♡', 'Long-term partnership', 'Responsive service built around your organization’s needs.'],
             ].map(([icon, title, text]) => (
               <div key={title} className="rounded-2xl bg-white p-5 dark:bg-slate-900">
                 <span className="grid h-10 w-10 place-items-center rounded-xl bg-brand-light text-lg text-brand dark:bg-slate-700">{icon}</span>
