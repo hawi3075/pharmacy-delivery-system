@@ -107,6 +107,43 @@ r.post('/categories', wrap(async (req, res) => {
   const { name, parentId } = z.object({ name: z.string().min(2), parentId: z.coerce.number().int().positive().nullable().optional() }).parse(req.body);
   res.json(await prisma.category.upsert({ where: { name }, update: { parentId: parentId ?? null }, create: { name, parentId: parentId ?? null } }));
 }));
+r.post('/categories/restore-standard', wrap(async (req, res) => {
+  const groups = [
+    { name: 'Pharmaceuticals', children: ['Essential Medicines', 'Specialty Therapeutics', 'Over-the-Counter Products', 'Antibiotics', 'Pain Relief', 'Vitamins & Supplements', 'Diabetes Care', 'Allergy Care'] },
+    { name: 'Medical Equipment & Devices', children: ['Diagnostic Equipment', 'Hospital Furniture', 'Surgical Instruments', 'Patient Monitors'] },
+    { name: 'Medical Consumables', children: ['PPE', 'Syringes & Needles', 'Gloves', 'Bandages & Dressings', 'Laboratory Supplies'] },
+    { name: 'Wholesale & Institutional Supply Services', children: ['Bulk Orders', 'Tender Participation', 'Scheduled Institutional Replenishment'] },
+  ];
+  const legacyNames = { Vitamins: 'Vitamins & Supplements', Allergy: 'Allergy Care', 'First Aid': 'Bandages & Dressings' };
+  await prisma.$transaction(async (tx) => {
+    const parents = {};
+    for (const group of groups) {
+      parents[group.name] = (await tx.category.upsert({
+        where: { name: group.name },
+        update: { parentId: null },
+        create: { name: group.name },
+      })).id;
+    }
+    for (const group of groups) {
+      for (const name of group.children) {
+        const category = await tx.category.upsert({
+          where: { name },
+          update: { parentId: parents[group.name] },
+          create: { name, parentId: parents[group.name] },
+        });
+        const legacyName = Object.keys(legacyNames).find((oldName) => legacyNames[oldName] === name);
+        if (legacyName) {
+          const legacy = await tx.category.findUnique({ where: { name: legacyName } });
+          if (legacy && legacy.id !== category.id) {
+            await tx.product.updateMany({ where: { categoryId: legacy.id }, data: { categoryId: category.id } });
+            await tx.category.delete({ where: { id: legacy.id } });
+          }
+        }
+      }
+    }
+  });
+  res.json({ ok: true });
+}));
 r.put('/categories/:id', wrap(async (req, res) => {
   const id = Number(req.params.id);
   const d = z.object({ name: z.string().min(2), parentId: z.coerce.number().int().positive().nullable().optional() }).parse(req.body);

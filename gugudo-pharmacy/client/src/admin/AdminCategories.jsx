@@ -2,13 +2,6 @@ import { useEffect, useState } from 'react';
 import { api } from '../api';
 import { Err, Field, PageTitle } from '../components/ui';
 
-const MAIN_CATEGORIES = [
-  { name: 'Pharmaceuticals', children: ['Essential Medicines', 'Specialty Therapeutics', 'Over-the-Counter Products', 'Antibiotics', 'Pain Relief', 'Vitamins & Supplements', 'Diabetes Care', 'Allergy Care'] },
-  { name: 'Medical Equipment & Devices', children: ['Diagnostic Equipment', 'Hospital Furniture', 'Surgical Instruments', 'Patient Monitors'] },
-  { name: 'Medical Consumables', children: ['PPE', 'Syringes & Needles', 'Gloves', 'Bandages & Dressings', 'Laboratory Supplies'] },
-  { name: 'Wholesale & Institutional Supply Services', children: ['Bulk Orders', 'Tender Participation', 'Scheduled Institutional Replenishment'] },
-];
-
 export default function AdminCategories() {
   const [categories, setCategories] = useState([]);
   const [form, setForm] = useState({ name: '', parentId: '' });
@@ -27,20 +20,7 @@ export default function AdminCategories() {
     setError('');
     setBusy(true);
     try {
-      const current = await api('/categories');
-      const legacyNames = { Vitamins: 'Vitamins & Supplements', Allergy: 'Allergy Care', 'First Aid': 'Bandages & Dressings' };
-      for (const [oldName, newName] of Object.entries(legacyNames)) {
-        const legacy = current.find((category) => category.name === oldName);
-        if (legacy && !current.some((category) => category.name === newName)) {
-          await api(`/admin/categories/${legacy.id}`, { method: 'PUT', body: { name: newName, parentId: null } });
-        }
-      }
-      for (const main of MAIN_CATEGORIES) {
-        await create(main.name);
-        const refreshed = await api('/categories');
-        const parent = refreshed.find((category) => category.name === main.name);
-        for (const child of main.children) await create(child, parent?.id ?? null);
-      }
+      await api('/admin/categories/restore-standard', { method: 'POST' });
       await load();
     } catch (e) {
       setError(e.message);
