@@ -3,10 +3,12 @@ import { api } from '../api';
 import { Err, Field, PageTitle } from '../components/ui';
 
 const MAIN_CATEGORIES = [
-  { name: 'Pharmaceuticals', children: ['Essential Medicines', 'Specialty Therapeutics', 'Over-the-Counter Products', 'Antibiotics', 'Pain Relief', 'Vitamins & Supplements', 'Diabetes Care', 'Allergy Care'] },
-  { name: 'Medical Equipment & Devices', children: ['Diagnostic Equipment', 'Hospital Furniture', 'Surgical Instruments', 'Patient Monitors'] },
-  { name: 'Medical Consumables', children: ['PPE', 'Syringes & Needles', 'Gloves', 'Bandages & Dressings', 'Laboratory Supplies'] },
-  { name: 'Wholesale & Institutional Supply Services', children: ['Bulk Orders', 'Tender Participation', 'Scheduled Institutional Replenishment'] },
+  { name: 'Antibiotics', children: [] },
+  { name: 'Pain Relief', children: [] },
+  { name: 'Vitamins', children: [] },
+  { name: 'Diabetes Care', children: [] },
+  { name: 'Allergy', children: [] },
+  { name: 'First Aid', children: [] },
 ];
 
 export default function AdminCategories() {
@@ -77,7 +79,7 @@ export default function AdminCategories() {
   return (
     <div>
       <PageTitle right={<button className="btn" disabled={busy} onClick={restoreStandardCategories}>Restore standard categories</button>}>Categories</PageTitle>
-      <p className="mb-5 max-w-2xl text-sm leading-6 text-slate-500">These are the same categories customers see in the store. Medicine types belong under Pharmaceuticals; the other business areas remain separate.</p>
+      <p className="mb-5 max-w-2xl text-sm leading-6 text-slate-500">These are the same categories customers see in the store.</p>
       <form onSubmit={add} className="card mb-5 grid gap-3 p-5 md:grid-cols-[1fr_1fr_auto] md:items-end">
         <Field label="Category name"><input required minLength={2} className="input" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder="e.g. Diagnostic Equipment" /></Field>
         <Field label="Parent category (optional)">
