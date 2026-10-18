@@ -77,7 +77,7 @@ export default function ProductDetail() {
   if (err) return <p className="p-10 text-center">{err}</p>;
   if (!p) return <div className="grid gap-6 md:grid-cols-2"><div className="card h-96 animate-pulse" /><div className="card h-96 animate-pulse" /></div>;
 
-  // Extra clinical content lives in p.details (JSON). Plain product fields still work as fallback.
+  
   const d = p.details || {};
   const out = p.stock === 0;
   const low = !out && p.stock < 5;
