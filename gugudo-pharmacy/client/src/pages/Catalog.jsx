@@ -201,7 +201,7 @@ export default function Catalog() {
         </div>
       </section>
 
-      {/* Visual category guide */}
+      
       {cats.length > 0 && (
         <section className="mt-8">
           <div className="mb-5 flex items-end justify-between gap-4">
