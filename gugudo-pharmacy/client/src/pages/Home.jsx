@@ -120,7 +120,7 @@ export default function Home() {
   const hi = (ms) => ({ animationDelay: `${ms}ms` });
   return (
     <div className="space-y-20">
-      {/* Hero */}
+      
       <section className="hero-grid relative overflow-hidden rounded-[2rem] bg-[#e6f6f8] px-7 py-12 dark:bg-slate-800 md:px-14 md:py-16">
         <span className="blob -left-10 top-10 h-64 w-64 bg-[#0e6f7e]/30" />
         <span className="blob -bottom-16 right-1/3 h-72 w-72 bg-[#7fd6c2]/40" style={{ animationDelay: '-7s' }} />
