@@ -72,8 +72,9 @@ function SectionTitle({ eyebrow, title, link = '/catalog' }) {
 }
 
 function CatTile({ c, i, big }) {
+  const category = c.id ? String(c.id) : c.name;
   return (
-    <Link to={`/catalog?category=${encodeURIComponent(c.name)}`} className={`group relative overflow-hidden rounded-3xl ${big ? 'col-span-2 row-span-2 min-h-[20rem]' : 'min-h-[10rem]'}`}>
+    <Link to={`/catalog?category=${encodeURIComponent(category)}`} className={`group relative overflow-hidden rounded-3xl ${big ? 'col-span-2 row-span-2 min-h-[20rem]' : 'min-h-[10rem]'}`}>
       <img src={catImages[i % catImages.length]} alt="" loading="lazy" className="absolute inset-0 h-full w-full object-cover transition duration-700 group-hover:scale-110" />
       <div className="absolute inset-0 bg-gradient-to-t from-[#102f2c]/90 via-[#102f2c]/25 to-transparent" />
       <div className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-2 p-5 text-white">
