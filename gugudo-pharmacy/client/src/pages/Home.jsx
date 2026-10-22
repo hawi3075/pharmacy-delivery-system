@@ -13,7 +13,12 @@ const catImages = [
   'https://images.unsplash.com/photo-1608248543803-ba4f8c70ae0b?auto=format&fit=crop&w=600&q=80',
   'https://images.unsplash.com/photo-1583947215259-38e31be8751f?auto=format&fit=crop&w=600&q=80',
 ];
-const MAIN_CATEGORIES = ['Pharmaceuticals', 'Medical Equipment & Devices', 'Medical Consumables', 'Wholesale & Institutional Supply Services'];
+const MAIN_CATEGORIES = [
+  { name: 'Pharmaceuticals', description: 'Essential medicines, specialty therapeutics, and over-the-counter products.' },
+  { name: 'Medical Equipment & Devices', description: 'Diagnostic tools, hospital furniture, surgical instruments, and patient monitors.' },
+  { name: 'Medical Consumables', description: 'PPE, syringes, gloves, bandages, and lab supplies.' },
+  { name: 'Wholesale & Institutional Supply Services', description: 'Tailored solutions for bulk orders, tender participation, and scheduled institutional replenishment.' },
+];
 
 function ShopCard({ p }) {
   const { t, addToCart } = useApp();
@@ -78,7 +83,7 @@ function CatTile({ c, i, big }) {
       <img src={catImages[i % catImages.length]} alt="" loading="lazy" className="absolute inset-0 h-full w-full object-cover transition duration-700 group-hover:scale-110" />
       <div className="absolute inset-0 bg-gradient-to-t from-[#102f2c]/90 via-[#102f2c]/25 to-transparent" />
       <div className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-2 p-5 text-white">
-        <div><h3 className={big ? 'text-3xl' : 'text-xl'}>{c.name}</h3>{c.children?.length > 0 && <p className="mt-1 max-w-xs text-xs text-white/70">{c.children.slice(0, 3).map((child) => child.name).join(' · ')}</p>}</div>
+        <div><h3 className={big ? 'text-3xl' : 'text-xl'}>{c.name}</h3><p className="mt-1 max-w-xs text-xs text-white/70">{c.description}</p></div>
         <span aria-hidden className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-white/20 backdrop-blur transition group-hover:bg-white group-hover:text-brand">↗</span>
       </div>
     </Link>
@@ -114,7 +119,10 @@ export default function Home() {
     api('/categories').then(setCats).catch(() => {});
   }, []);
 
-  const shown = cats.length ? cats.slice(0, 5) : MAIN_CATEGORIES.map((name) => ({ name }));
+  const shown = MAIN_CATEGORIES.map((mainCategory) => ({
+    ...mainCategory,
+    id: cats.find((category) => category.name === mainCategory.name)?.id,
+  }));
   const trending = [...products].sort((a, b) => b.id - a.id);
   const topRated = [...products].sort((a, b) => getRating(b) - getRating(a));
   const newest = [...products].sort((a, b) => b.id - a.id).slice(0, 4);
@@ -138,7 +146,7 @@ export default function Home() {
             <Link to="/contact" className="btn-ghost">Partner with us</Link>
           </div>
           <div className="hero-in mt-5 flex flex-wrap gap-2" style={hi(460)}>
-            {cats.slice(0, 4).map((c) => <Link key={c.id} to={`/catalog?category=${c.id}`} className="rounded-full border border-brand/20 bg-white/70 px-4 py-2 text-sm font-bold text-[#207065] transition hover:bg-white dark:bg-slate-900/60">{c.name}</Link>)}
+            {shown.map((c) => <Link key={c.name} to={`/catalog?category=${encodeURIComponent(c.id || c.name)}`} className="rounded-full border border-brand/20 bg-white/70 px-4 py-2 text-sm font-bold text-[#207065] transition hover:bg-white dark:bg-slate-900/60">{c.name}</Link>)}
           </div>
         </div>
         <div className="hero-in relative mt-10 md:absolute md:right-8 md:top-8 md:mt-0 md:w-[43%]" style={hi(250)}>
@@ -169,7 +177,7 @@ export default function Home() {
         <Reveal><section>
           <SectionTitle eyebrow="Our product range" title="Pharmaceuticals and medical supplies" />
           <div className="grid grid-cols-2 gap-4 md:grid-cols-4 md:grid-rows-2">
-            {shown.map((c, i) => <CatTile key={c.id} c={c} i={i} big={i === 0} />)}
+            {shown.map((c, i) => <CatTile key={c.name} c={c} i={i} big={i === 0} />)}
           </div>
         </section></Reveal>
       )}
