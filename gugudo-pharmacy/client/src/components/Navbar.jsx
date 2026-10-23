@@ -5,11 +5,11 @@ import { LANGS } from '../i18n';
 import { useWishlist } from '../pages/Wishlist';
 import { api } from '../api';
 
-/* ============ EASY SETTINGS ============ */
+
 const NAV_THEME = 'white'; // 'white' (clean, like your Figma) or 'teal' (solid brand colour)
 const ROUTES = { about: '/about', contact: '/contact', wishlist: '/wishlist' };
 const MAIN_CATEGORIES = ['Pharmaceuticals', 'Medical Equipment & Devices', 'Medical Consumables', 'Wholesale & Institutional Supply Services'];
-/* ======================================= */
+
 
 const THEMES = {
   white: {
