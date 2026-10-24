@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 
-const storyImage = 'https://images.unsplash.com/photo-1580281658628-09d7b5c4e0d7?auto=format&fit=crop&w=1200&q=85';
-const careImage = 'https://images.unsplash.com/photo-1576091160550-2173dba999ef?auto=format&fit=crop&w=1000&q=85';
+const storyImage = '/image4.jpeg';
+const careImage = '/image2.png';
 
 export default function About() {
   return (
@@ -13,12 +13,12 @@ export default function About() {
           <p className="mt-6 max-w-xl text-lg leading-8 text-[#52625b]">Founded in Hawassa, Gugudo Pharma is building a trusted, reliable, and innovative pharmaceutical and medical equipment supply partner for hospitals, clinics, pharmacies, and NGOs.</p>
           <Link to="/contact" className="btn mt-8">Partner with us →</Link>
         </div>
-        <img src={storyImage} alt="Pharmacist preparing medicines" className="mt-10 h-72 w-full rounded-2xl object-cover shadow-xl md:absolute md:right-10 md:top-10 md:mt-0 md:h-[28rem] md:w-[40%]" />
+        <img src={storyImage} alt="Gugudo Pharma warehouse stocked with medical supplies" className="mt-10 h-72 w-full rounded-2xl object-cover shadow-xl md:absolute md:right-10 md:top-10 md:mt-0 md:h-[28rem] md:w-[40%]" />
       </section>
 
       <section className="grid items-center gap-10 md:grid-cols-2">
         <div><p className="text-xs font-extrabold uppercase tracking-[0.2em] text-brand">Our story</p><h2 className="mt-2 text-4xl">Bridging the healthcare supply gap.</h2><p className="mt-5 leading-8 text-slate-600">Gugudo was established in Hawassa with a clear purpose: make safe, high-quality, and affordable pharmaceuticals and medical devices more accessible to healthcare providers across the region.</p><p className="mt-4 leading-8 text-slate-600">We combine dependable sourcing, responsible storage, responsive service, and digital convenience to help institutions plan, procure, and replenish with confidence.</p></div>
-        <div className="relative"><img src={careImage} alt="Healthcare professional speaking with a patient" className="h-80 w-full rounded-[1.5rem] object-cover shadow-lg" /><div className="absolute -bottom-5 -left-5 rounded-2xl bg-white p-5 shadow-xl dark:bg-slate-800"><p className="text-3xl font-black text-brand">12k+</p><p className="text-xs font-bold text-slate-500">customers cared for</p></div></div>
+        <div className="relative"><img src={careImage} alt="Medical monitoring equipment ready for patient care" loading="lazy" className="h-80 w-full rounded-[1.5rem] object-cover shadow-lg" /><div className="absolute -bottom-5 -left-5 rounded-2xl bg-white p-5 shadow-xl dark:bg-slate-800"><p className="text-3xl font-black text-brand">12k+</p><p className="text-xs font-bold text-slate-500">customers cared for</p></div></div>
       </section>
 
       <section><div className="mb-7 max-w-2xl"><p className="text-xs font-extrabold uppercase tracking-[0.2em] text-brand">Our direction</p><h2 className="mt-2 text-4xl">Vision, mission, and values</h2></div><div className="grid gap-5 md:grid-cols-3">{[['01', 'Our vision', 'To be the most trusted, reliable, and innovative partner in pharmaceutical and medical equipment supply across Southern Ethiopia.'], ['02', 'Our mission', 'To bridge the healthcare supply gap with safe, high-quality, and affordable products delivered with integrity and operational excellence.'], ['03', 'Our values', 'Quality and safety, reliability, integrity, and partnership guide every relationship and every delivery.']].map(([number, title, text]) => <div className="card p-6" key={number}><p className="text-4xl text-brand/60">{number}</p><h3 className="mt-4 text-2xl">{title}</h3><p className="mt-2 text-sm leading-7 text-slate-500">{text}</p></div>)}</div></section>
