@@ -36,8 +36,20 @@ export function DetailLink({ id, className = '' }) {
   );
 }
 
+const categoryImages = [
+  { terms: ['pharmaceutical', 'essential medicine', 'specialty therapeutic', 'over-the-counter', 'antibiotic', 'pain relief', 'vitamin', 'diabet', 'allerg'], src: '/image1.png' },
+  { terms: ['medical equipment', 'device', 'diagnostic', 'hospital furniture', 'surgical instrument', 'patient monitor'], src: '/image2.png' },
+  { terms: ['medical consumable', 'ppe', 'syringe', 'needle', 'glove', 'bandage', 'dressing', 'laboratory supply', 'first aid'], src: '/image3.png' },
+  { terms: ['wholesale', 'institutional', 'bulk order', 'tender', 'replenishment'], src: '/image4.jpeg' },
+];
+
+export function getCategoryImage(categoryName = '') {
+  const name = categoryName.toLowerCase();
+  return categoryImages.find(({ terms }) => terms.some((term) => name.includes(term)))?.src;
+}
+
 export function ProductImg({ p, className = 'h-40' }) {
-  const src = img(p.imageUrl);
+  const src = getCategoryImage(p.category?.name) || img(p.imageUrl);
   return src
     ? <img src={src} alt={p.name} loading="lazy" className={`${className} w-full rounded-lg object-cover`} />
     : <div className={`${className} flex w-full items-center justify-center rounded-lg bg-brand-light text-4xl dark:bg-slate-700`} aria-hidden>💊</div>;

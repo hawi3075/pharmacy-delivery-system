@@ -38,7 +38,7 @@ export function AppProvider({ children }) {
   const addToCart = (p, qty = 1) => setCart((c) => {
     const ex = c.find((i) => i.id === p.id);
     if (ex) return c.map((i) => (i.id === p.id ? { ...i, qty: Math.min(i.qty + qty, p.stock) } : i));
-    return [...c, { id: p.id, name: p.name, price: p.price, imageUrl: p.imageUrl, requiresRx: p.requiresRx, stock: p.stock, qty }];
+    return [...c, { id: p.id, name: p.name, price: p.price, imageUrl: p.imageUrl, category: p.category, requiresRx: p.requiresRx, stock: p.stock, qty }];
   });
   const setQty = (id, qty) => setCart((c) => c.map((i) => (i.id === id ? { ...i, qty: Math.max(1, Math.min(qty, i.stock)) } : i)));
   const removeFromCart = (id) => setCart((c) => c.filter((i) => i.id !== id));

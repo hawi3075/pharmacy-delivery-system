@@ -9,6 +9,7 @@ import { api } from '../api';
 const NAV_THEME = 'white'; // 'white' (clean, like your Figma) or 'teal' (solid brand colour)
 const ROUTES = { about: '/about', contact: '/contact', wishlist: '/wishlist' };
 const MAIN_CATEGORIES = ['Pharmaceuticals', 'Medical Equipment & Devices', 'Medical Consumables', 'Wholesale & Institutional Supply Services'];
+const mainCategoriesOnly = (categories) => MAIN_CATEGORIES.map((name) => categories.find((category) => category.name === name) || { name });
 
 
 const THEMES = {
@@ -60,7 +61,7 @@ function CategoryMenu({ th, x, inline = false }) {
   const [open, setOpen] = useState(false);
   const ref = useOutside(() => setOpen(false));
   const timer = useRef(null);
-  useEffect(() => { api('/categories').then((data) => setCats(data.length ? data : MAIN_CATEGORIES.map((name) => ({ name })))).catch(() => setCats(MAIN_CATEGORIES.map((name) => ({ name })))); }, []);
+  useEffect(() => { api('/categories').then((data) => setCats(mainCategoriesOnly(data))).catch(() => setCats(MAIN_CATEGORIES.map((name) => ({ name })))); }, []);
   const show = () => { clearTimeout(timer.current); setOpen(true); };
   const hide = () => { timer.current = setTimeout(() => setOpen(false), 160); };
   const item = 'flex w-full items-center justify-between rounded-lg px-3 py-2.5 text-left text-sm font-semibold text-slate-700 transition hover:bg-brand-light hover:text-brand dark:text-slate-200 dark:hover:bg-slate-700';
