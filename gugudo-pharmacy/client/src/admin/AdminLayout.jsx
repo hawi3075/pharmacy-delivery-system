@@ -61,9 +61,9 @@ export default function AdminLayout() {
   ];
 
   const side = ({ isActive }) =>
-    `flex items-center gap-3.5 rounded-xl px-4 py-3 text-[15px] font-bold transition [@media(max-height:820px)]:py-2.5 ${isActive
-      ? 'bg-brand text-white shadow-md'
-      : 'text-slate-600 hover:bg-brand-light hover:text-brand dark:text-slate-300 dark:hover:bg-slate-700'}`;
+    `group flex items-center gap-3.5 rounded-xl px-4 py-3 text-[15px] font-bold transition [@media(max-height:820px)]:py-2.5 ${isActive
+      ? 'bg-[#173f3b] text-white shadow-lg shadow-[#173f3b]/20'
+      : 'text-slate-600 hover:bg-[#e6f6f8] hover:text-brand dark:text-slate-300 dark:hover:bg-slate-700'}`;
   const pill = ({ isActive }) =>
     `flex items-center gap-2 whitespace-nowrap rounded-full border px-4 py-2 text-sm font-bold transition ${isActive
       ? 'border-brand bg-brand text-white'
@@ -84,32 +84,38 @@ export default function AdminLayout() {
   );
 
   return (
-    <div className="grid min-w-0 gap-4 sm:gap-6 md:grid-cols-[17rem_minmax(0,1fr)] lg:grid-cols-[19rem_minmax(0,1fr)]">
+    <div className="relative grid min-w-0 gap-4 sm:gap-6 md:grid-cols-[17rem_minmax(0,1fr)] lg:grid-cols-[19rem_minmax(0,1fr)]">
       {/* Mobile: compact scrolling tabs */}
-      <nav className="no-scrollbar -mx-1 flex max-w-full gap-2 overflow-x-auto px-1 pb-1 md:hidden" aria-label="Admin">
+      <nav className="no-scrollbar -mx-1 flex max-w-full gap-2 overflow-x-auto rounded-2xl bg-[#173f3b] p-2 px-3 pb-2 shadow-lg md:hidden" aria-label="Admin">
         {[...manage, ...(isSuper ? sup : [])].map((i) => (
           <NavLink key={i.to} to={i.to} end={i.end} className={pill}><Icon name={i.icon} />{i.label}{i.badge > 0 && <span className="rounded-full bg-rose-600 px-1.5 text-xs text-white">{i.badge}</span>}</NavLink>
         ))}
       </nav>
 
       {/* Desktop: large full-height sidebar */}
-      <aside className="card hidden max-h-[calc(100vh-6.75rem)] flex-col overflow-y-auto overscroll-contain p-5 md:sticky md:top-[5.25rem] md:flex md:self-start" aria-label="Admin">
-        <div className="flex items-center gap-3 rounded-2xl bg-brand-light p-4 dark:bg-slate-700">
-          <span className="grid h-12 w-12 shrink-0 place-items-center rounded-full bg-brand text-lg font-bold text-white">{user.name[0]?.toUpperCase()}</span>
-          <div className="min-w-0">
-            <p className="truncate font-bold">{user.name}</p>
-            <p className="text-xs font-semibold text-brand">{isSuper ? x('super') : x('admin')} · {x('console')}</p>
+      <aside className="hidden max-h-[calc(100vh-6.75rem)] flex-col overflow-y-auto overscroll-contain rounded-[1.5rem] bg-[#173f3b] p-4 text-white shadow-xl shadow-[#173f3b]/10 md:sticky md:top-[5.25rem] md:flex md:self-start" aria-label="Admin">
+        <div className="border-b border-white/10 px-2 pb-5">
+          <p className="text-[11px] font-extrabold uppercase tracking-[0.25em] text-[#b9f0dc]">Gugudo Pharma</p>
+          <div className="mt-4 flex items-center gap-3">
+            <span className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-[#b9f0dc] text-lg font-black text-[#173f3b]">{user.name[0]?.toUpperCase()}</span>
+            <div className="min-w-0">
+              <p className="truncate font-bold">{user.name}</p>
+              <p className="text-xs font-semibold text-[#b9f0dc]">{isSuper ? x('super') : x('admin')}</p>
+            </div>
           </div>
         </div>
+        <div className="px-2 pt-4 text-xs font-semibold text-white/50">{x('console')}</div>
+        <div className="mt-1 rounded-2xl bg-white/5 p-2">
+        </div>
 
-        <nav className="mt-3" aria-label="Admin menu">
+        <nav className="mt-1" aria-label="Admin menu">
           {group(x('manage'), manage)}
           {isSuper && group(x('superAdmin'), sup)}
         </nav>
 
-        <div className="mt-4 grid gap-1 border-t border-[#e5e4dc] pt-3 dark:border-slate-700">
-          <Link to="/" className="flex items-center gap-3.5 rounded-xl px-4 py-3 text-[15px] font-bold text-slate-600 transition hover:bg-brand-light hover:text-brand dark:text-slate-300 dark:hover:bg-slate-700"><Icon name="store" />{x('store')}</Link>
-          <button type="button" onClick={() => { logout(); nav('/'); }} className="flex items-center gap-3.5 rounded-xl px-4 py-3 text-left text-[15px] font-bold text-red-600 transition hover:bg-red-50 dark:hover:bg-red-950"><Icon name="logout" />{t('logout')}</button>
+        <div className="mt-4 grid gap-1 border-t border-white/10 pt-3">
+          <Link to="/" className="flex items-center gap-3.5 rounded-xl px-4 py-3 text-[15px] font-bold text-white/70 transition hover:bg-white/10 hover:text-white"><Icon name="store" />{x('store')}</Link>
+          <button type="button" onClick={() => { logout(); nav('/'); }} className="flex items-center gap-3.5 rounded-xl px-4 py-3 text-left text-[15px] font-bold text-[#ffb4a9] transition hover:bg-white/10 hover:text-white"><Icon name="logout" />{t('logout')}</button>
         </div>
       </aside>
 
