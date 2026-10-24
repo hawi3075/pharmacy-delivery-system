@@ -25,23 +25,42 @@ export default function Contact() {
   return (
     <div className="mx-auto max-w-6xl pb-10">
       <section className="relative overflow-hidden rounded-[2rem] bg-[#e6f6f8] px-7 py-12 md:px-14 md:py-16">
-        <div className="relative z-10 max-w-2xl">
+        <div className="relative z-10 max-w-xl">
           <p className="text-xs font-extrabold uppercase tracking-[0.25em] text-brand">Partner with Gugudo</p>
           <h1 className="mt-3 text-5xl leading-tight text-[#173f3b] md:text-7xl">Let’s build a stronger supply chain.</h1>
           <p className="mt-5 max-w-xl text-base leading-7 text-[#52625b]">For wholesale orders, institutional supply, tender participation, or product questions, our Hawassa team is ready to help.</p>
+          <div className="mt-8 flex flex-wrap gap-3 text-sm font-bold text-[#173f3b]">
+            <span className="rounded-full bg-white/80 px-4 py-2">Fast response</span>
+            <span className="rounded-full bg-white/80 px-4 py-2">Trusted supply</span>
+            <span className="rounded-full bg-white/80 px-4 py-2">Local support</span>
+          </div>
         </div>
-        <div className="contact-art absolute -right-4 -top-10 hidden h-72 w-80 md:block" aria-hidden>
-          <span className="contact-art__circle" />
-          <span className="contact-art__cross">+</span>
-          <span className="contact-art__pill" />
+        <div className="relative mt-10 md:absolute md:right-10 md:top-10 md:mt-0 md:block md:w-[38%]">
+          <img src="/image4.jpeg" alt="Gugudo Pharma team preparing medical supplies" className="h-64 w-full rounded-3xl object-cover shadow-xl md:h-72" />
+          <div className="absolute -bottom-4 -left-4 rounded-2xl bg-[#173f3b] px-5 py-4 text-white shadow-lg">
+            <p className="text-2xl font-black">Ready to help</p>
+            <p className="mt-1 text-xs text-white/70">From Hawassa to your facility</p>
+          </div>
         </div>
       </section>
 
       <div className="mt-6 grid gap-5 md:grid-cols-3">
-        {[['✉', 'Email us', 'gugudopharma27@gmail.com', 'For quotations and partnerships.'], ['✆', 'WhatsApp', '0916 853 543', 'Call or message our team.'], ['➤', 'Telegram', '0950 477 994', 'Connect with Gugudo Pharma.']].map(([icon, title, line, detail]) => (
-          <div className="card p-6" key={title}><p className="text-2xl text-brand">{icon}</p><h2 className="mt-4 text-2xl">{title}</h2><p className="mt-2 text-sm leading-7 text-slate-500">{line}<br />{detail}</p></div>
+        {[['✉', 'Email us', 'gugudopharma27@gmail.com', 'For quotations and partnerships.', 'mailto:gugudopharma27@gmail.com'], ['✆', 'WhatsApp', '0916 853 543', 'Call or message our team.', 'tel:+251916853543'], ['➤', 'Telegram', '0950 477 994', 'Connect with Gugudo Pharma.', 'tel:+251950477994']].map(([icon, title, line, detail, href]) => (
+          <a href={href} className="card group p-6 transition hover:-translate-y-1 hover:border-brand hover:shadow-lg" key={title}><p className="text-2xl text-brand">{icon}</p><h2 className="mt-4 text-2xl">{title} <span className="text-base text-brand opacity-0 transition group-hover:opacity-100">↗</span></h2><p className="mt-2 text-sm leading-7 text-slate-500">{line}<br />{detail}</p></a>
         ))}
       </div>
+
+      <section className="mt-10 grid items-center gap-8 rounded-[2rem] bg-[#f1eee5] p-7 md:grid-cols-[.8fr_1.2fr] md:p-10">
+        <div>
+          <p className="text-xs font-extrabold uppercase tracking-[0.2em] text-brand">What can we help with?</p>
+          <h2 className="mt-2 text-4xl text-[#173f3b]">One conversation can move your care forward.</h2>
+        </div>
+        <div className="grid gap-3 sm:grid-cols-3">
+          {[['01', 'Wholesale orders'], ['02', 'Tender support'], ['03', 'Scheduled supply']].map(([number, title]) => (
+            <div className="rounded-2xl bg-white p-5 shadow-sm" key={number}><span className="text-sm font-black text-brand">{number}</span><h3 className="mt-5 text-xl">{title}</h3><p className="mt-2 text-sm leading-6 text-slate-500">Practical support for your next order.</p></div>
+          ))}
+        </div>
+      </section>
 
       <section className="mt-8 grid gap-6 lg:grid-cols-[1.15fr_.85fr]">
         <div className="card p-6 md:p-8">
