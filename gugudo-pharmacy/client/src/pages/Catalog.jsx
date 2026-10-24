@@ -19,7 +19,17 @@ const categoryVisuals = [
   { match: 'diabet', icon: '♡', description: 'Thoughtful support for daily care', image: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=700&q=80' },
 ];
 const defaultCategoryVisual = { icon: '✚', description: 'Trusted care, thoughtfully selected', image: 'https://images.unsplash.com/photo-1471864190281-a93a3070b6de?auto=format&fit=crop&w=700&q=80' };
-const getCategoryVisual = (name = '') => categoryVisuals.find((v) => name.toLowerCase().includes(v.match)) || defaultCategoryVisual;
+const mainCategoryImages = {
+  Pharmaceuticals: '/image1.png',
+  'Medical Equipment & Devices': '/image2.png',
+  'Medical Consumables': '/image3.png',
+  'Wholesale & Institutional Supply Services': '/image4.jpeg',
+};
+const getCategoryVisual = (name = '') => {
+  const mainImage = mainCategoryImages[name];
+  if (mainImage) return { ...defaultCategoryVisual, image: mainImage };
+  return categoryVisuals.find((v) => name.toLowerCase().includes(v.match)) || defaultCategoryVisual;
+};
 const flattenCategories = (categories) => categories.flatMap((category) => [category, ...(category.children || [])]);
 const MAIN_CATEGORIES = ['Pharmaceuticals', 'Medical Equipment & Devices', 'Medical Consumables', 'Wholesale & Institutional Supply Services'];
 
@@ -219,7 +229,7 @@ export default function Catalog() {
               const active = String(c.id) === category;
               return (
                 <Link key={c.id || c.name} to={`/catalog?category=${encodeURIComponent(c.name)}`} className={`category-feature group relative h-52 overflow-hidden rounded-2xl ${active ? 'ring-2 ring-brand ring-offset-2' : ''}`}>
-                  <img src={visual.image} alt="" loading="lazy" className="absolute inset-0 h-full w-full object-cover transition duration-700 group-hover:scale-110" />
+                  <img src={visual.image} alt={c.name} loading="lazy" className="absolute inset-0 h-full w-full object-cover transition duration-700 group-hover:scale-110" />
                   <div className="absolute inset-0 bg-gradient-to-t from-[#102f2c]/95 via-[#102f2c]/25 to-transparent" />
                   <div className="absolute inset-x-0 bottom-0 p-5 text-white">
                     <span className="mb-2 grid h-9 w-9 place-items-center rounded-xl bg-white/20 text-lg backdrop-blur">{visual.icon}</span>

@@ -8,10 +8,10 @@ import { WishButton } from './Wishlist';
 
 const heroImage = 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=1200&q=85';
 const catImages = [
-  'https://images.unsplash.com/photo-1556228578-8c89e6adf883?auto=format&fit=crop&w=900&q=80',
-  'https://images.unsplash.com/photo-1607619056574-7b8d3ee536b2?auto=format&fit=crop&w=600&q=80',
-  'https://images.unsplash.com/photo-1608248543803-ba4f8c70ae0b?auto=format&fit=crop&w=600&q=80',
-  'https://images.unsplash.com/photo-1583947215259-38e31be8751f?auto=format&fit=crop&w=600&q=80',
+  '/image1.png',
+  '/image2.png',
+  '/image3.png',
+  '/image4.jpeg',
 ];
 const MAIN_CATEGORIES = [
   { name: 'Pharmaceuticals', description: 'Essential medicines, specialty therapeutics, and over-the-counter products.' },
@@ -80,7 +80,7 @@ function CatTile({ c, i, big }) {
   const category = c.id ? String(c.id) : c.name;
   return (
     <Link to={`/catalog?category=${encodeURIComponent(category)}`} className={`group relative overflow-hidden rounded-3xl ${big ? 'col-span-2 row-span-2 min-h-[20rem]' : 'min-h-[10rem]'}`}>
-      <img src={catImages[i % catImages.length]} alt="" loading="lazy" className="absolute inset-0 h-full w-full object-cover transition duration-700 group-hover:scale-110" />
+      <img src={catImages[i % catImages.length]} alt={c.name} loading="lazy" className="absolute inset-0 h-full w-full object-cover transition duration-700 group-hover:scale-110" />
       <div className="absolute inset-0 bg-gradient-to-t from-[#102f2c]/90 via-[#102f2c]/25 to-transparent" />
       <div className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-2 p-5 text-white">
         <div><h3 className={big ? 'text-3xl' : 'text-xl'}>{c.name}</h3><p className="mt-1 max-w-xs text-xs text-white/70">{c.description}</p></div>
