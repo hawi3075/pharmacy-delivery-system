@@ -20,7 +20,10 @@ export default function ChatWidget() {
       const { reply } = await api('/ai/chat', { method: 'POST', body: { messages: next, lang } });
       setMsgs([...next, { role: 'assistant', content: reply }]);
     } catch (err) {
-      setMsgs([...next, { role: 'assistant', content: err.message }]);
+      const message = err.message.includes('ANTHROPIC_API_KEY')
+        ? 'The AI assistant is not configured yet. Add your Anthropic API key to server/.env, restart the API, and try again.'
+        : err.message;
+      setMsgs([...next, { role: 'assistant', content: message }]);
     } finally { setBusy(false); }
   }
 

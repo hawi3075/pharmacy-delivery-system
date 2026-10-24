@@ -6,10 +6,11 @@ import { optionalAuth, staff } from '../middleware/auth.js';
 const r = Router();
 
 async function claude(system, messages, max_tokens = 700) {
-  if (!process.env.ANTHROPIC_API_KEY) throw Object.assign(new Error('AI assistant is not configured yet'), { status: 503 });
+  const apiKey = process.env.ANTHROPIC_API_KEY?.trim();
+  if (!apiKey) throw Object.assign(new Error('AI assistant is not configured. Add ANTHROPIC_API_KEY to server/.env and restart the API.'), { status: 503 });
   const res = await fetch('https://api.anthropic.com/v1/messages', {
     method: 'POST',
-    headers: { 'content-type': 'application/json', 'x-api-key': process.env.ANTHROPIC_API_KEY, 'anthropic-version': '2023-06-01' },
+    headers: { 'content-type': 'application/json', 'x-api-key': apiKey, 'anthropic-version': '2023-06-01' },
     body: JSON.stringify({ model: process.env.ANTHROPIC_MODEL || 'claude-sonnet-4-6', max_tokens, system, messages }),
   });
   const data = await res.json();
