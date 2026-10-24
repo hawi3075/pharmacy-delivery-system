@@ -105,8 +105,6 @@ export default function AdminLayout() {
           </div>
         </div>
         <div className="px-2 pt-4 text-xs font-semibold text-white/50">{x('console')}</div>
-        <div className="mt-1 rounded-2xl bg-white/5 p-2">
-        </div>
 
         <nav className="mt-1" aria-label="Admin menu">
           {group(x('manage'), manage)}
