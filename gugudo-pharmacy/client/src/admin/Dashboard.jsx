@@ -29,13 +29,13 @@ const tones = {
 const Stat = ({ label, value, hint, icon, tone = 'teal', warn }) => (
   <div className="card p-4">
     <div className="flex items-start justify-between">
-      <p className="text-sm text-slate-500">{label}</p>
+      <p className="text-sm font-semibold text-slate-600">{label}</p>
       <span className={`grid h-9 w-9 place-items-center rounded-lg ${tones[warn ? 'red' : tone]}`}>
         <Icon name={icon} />
       </span>
     </div>
-    <p className={`mt-2 text-3xl font-extrabold tracking-tight ${warn ? 'text-red-600' : ''}`}>{value}</p>
-    {hint && <p className="mt-2 border-t pt-2 text-xs text-slate-500 dark:border-slate-700">{hint}</p>}
+    <p className={`mt-2 text-2xl font-extrabold tracking-tight text-slate-900 dark:text-white ${warn ? 'text-red-600 dark:text-red-300' : ''}`}>{value}</p>
+    {hint && <p className="mt-2 border-t pt-2 text-xs font-medium text-slate-600 dark:border-slate-700 dark:text-slate-300">{hint}</p>}
   </div>
 );
 
