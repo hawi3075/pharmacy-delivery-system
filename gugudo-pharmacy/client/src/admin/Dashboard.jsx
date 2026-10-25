@@ -27,7 +27,7 @@ const tones = {
 };
 
 const Stat = ({ label, value, hint, icon, tone = 'teal', warn }) => (
-  <div className="card p-4">
+  <div className="card border-2 border-[#d4e9e9] p-4 shadow-[0_10px_25px_rgba(6,59,72,0.08)] dark:border-slate-600">
     <div className="flex items-start justify-between">
       <p className="text-sm font-semibold text-slate-600">{label}</p>
       <span className={`grid h-9 w-9 place-items-center rounded-lg ${tones[warn ? 'red' : tone]}`}>
@@ -65,7 +65,7 @@ export default function Dashboard() {
       {/* Header */}
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
-          <h1 className="font-serif text-3xl font-extrabold">{t('dashboard')}</h1>
+          <h1 className="font-serif text-3xl font-extrabold text-[#063b48] dark:text-white">{t('dashboard')}</h1>
           <p className="mt-1 max-w-md text-sm text-slate-500">
             Orders, sales and stock levels for your pharmacy at a glance.
           </p>
