@@ -84,7 +84,7 @@ export default function AdminLayout() {
   );
 
   return (
-    <div className="relative grid min-w-0 gap-4 sm:gap-6 md:grid-cols-[17rem_minmax(0,1fr)] lg:grid-cols-[19rem_minmax(0,1fr)]">
+    <div className="relative grid min-w-0 gap-4 sm:gap-6 md:-mx-5 md:-my-8 md:min-h-[calc(100vh-4rem)] md:grid-cols-[17rem_minmax(0,1fr)] lg:grid-cols-[19rem_minmax(0,1fr)]">
       {/* Mobile: compact scrolling tabs */}
       <nav className="no-scrollbar -mx-1 flex max-w-full gap-2 overflow-x-auto rounded-2xl bg-[#173f3b] p-2 px-3 pb-2 shadow-lg md:hidden" aria-label="Admin">
         {[...manage, ...(isSuper ? sup : [])].map((i) => (
@@ -93,7 +93,7 @@ export default function AdminLayout() {
       </nav>
 
       {/* Desktop: large full-height sidebar */}
-      <aside className="hidden max-h-[calc(100vh-6.75rem)] flex-col overflow-y-auto overscroll-contain rounded-[1.5rem] bg-[#173f3b] p-4 text-white shadow-xl shadow-[#173f3b]/10 md:sticky md:top-[5.25rem] md:flex md:self-start" aria-label="Admin">
+      <aside className="hidden h-[calc(100vh-4rem)] flex-col overflow-y-auto overscroll-contain bg-[#173f3b] p-4 text-white shadow-xl shadow-[#173f3b]/10 md:sticky md:top-16 md:flex md:self-start" aria-label="Admin">
         <div className="border-b border-white/10 px-2 pb-5">
           <p className="text-[11px] font-extrabold uppercase tracking-[0.25em] text-[#b9f0dc]">Gugudo Pharma</p>
           <div className="mt-4 flex items-center gap-3">
@@ -117,7 +117,7 @@ export default function AdminLayout() {
         </div>
       </aside>
 
-      <div className="min-w-0"><Outlet /></div>
+      <div className="min-w-0 md:p-8"><Outlet /></div>
     </div>
   );
 }
