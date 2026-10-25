@@ -31,7 +31,6 @@ const THEMES = {
   },
 };
 
-// Labels this navbar adds itself, so no other file needs editing.
 const EXTRA = {
   en: { wishlist: 'Wishlist', about: 'About', contact: 'Contact', signInUp: 'Log in / Sign up', categories: 'Categories', allMeds: 'All products' },
   om: { wishlist: 'Fedhii koo', about: 'Waa’ee keenya', contact: 'Nu qunnamaa', signInUp: "Seeni / Galmaa'i", categories: 'Gosoota', allMeds: 'Oomishaalee hunda' },
