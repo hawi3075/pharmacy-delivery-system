@@ -144,7 +144,7 @@ function Prefs({ th, align }) {
   );
 }
 
-// One button: "Log in / Sign up" when signed out, account menu when signed in.
+
 function Account({ th, inline = false, x }) {
   const { t, user, logout } = useApp();
   const nav = useNavigate();
