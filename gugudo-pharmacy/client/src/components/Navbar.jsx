@@ -54,7 +54,7 @@ function useOutside(onOutside) {
   return ref;
 }
 
-// Category dropdown: opens on hover (desktop), on tap/click, or as an expandable list on mobile
+ 
 function CategoryMenu({ th, x, inline = false }) {
   const [cats, setCats] = useState([]);
   const [open, setOpen] = useState(false);
