@@ -4,6 +4,12 @@ import { useApp } from '../store';
 import { Err, Field, PageTitle, money } from '../components/ui';
 
 const blank = { name: '', generic: '', description: '', price: '', stock: 0, lowStockAt: 5, requiresRx: false, categoryId: '', batchNo: '', expiry: '', manufacturer: '', active: true };
+const MAIN_CATEGORIES = [
+  'Pharmaceuticals',
+  'Medical Equipment & Devices',
+  'Medical Consumables',
+  'Wholesale & Institutional Supply Services',
+];
 
 export default function AdminProducts() {
   const { t } = useApp();
@@ -16,7 +22,19 @@ export default function AdminProducts() {
   const [busy, setBusy] = useState(false);
   const allCats = cats.flatMap((c) => [c, ...(c.children || [])]);
 
-  const load = () => { api('/admin/products').then(setList); api('/categories').then(setCats); };
+  const loadCategories = async () => {
+    const current = await api('/categories');
+    const hasAllMainCategories = MAIN_CATEGORIES.every((name) => current.some((category) => category.name === name));
+    if (!hasAllMainCategories) {
+      await api('/admin/categories/restore-standard', { method: 'POST' });
+      return api('/categories');
+    }
+    return current;
+  };
+  const load = () => {
+    api('/admin/products').then(setList).catch((e) => setErr(e.message));
+    loadCategories().then(setCats).catch((e) => setErr(e.message));
+  };
   useEffect(load, []);
   const set = (k) => (e) => setForm({ ...form, [k]: e.target.type === 'checkbox' ? e.target.checked : e.target.value });
 
@@ -84,7 +102,7 @@ export default function AdminProducts() {
               <Field label="Generic name"><input className="input" value={form.generic || ''} onChange={set('generic')} /></Field>
               <Field label={`${t('price')} (ETB) *`}><input required type="number" step="0.01" min="0" className="input" value={form.price} onChange={set('price')} /></Field>
               <Field label={t('category')}>
-                <select className="input" value={form.categoryId} onChange={set('categoryId')}><option value="">—</option>{cats.map((c) => <optgroup key={c.id} label={c.name}><option value={c.id}>{c.name} (main category)</option>{(c.children || []).map((child) => <option key={child.id} value={child.id}>↳ {child.name}</option>)}</optgroup>)}</select>
+                <select className="input" value={form.categoryId} onChange={set('categoryId')}><option value="">Choose a main category or subcategory</option>{cats.map((c) => <optgroup key={c.id} label={c.name}><option value={c.id}>{c.name} (main category)</option>{(c.children || []).map((child) => <option key={child.id} value={child.id}>↳ {child.name}</option>)}</optgroup>)}</select>
               </Field>
               <Field label={t('stock')}><input type="number" min="0" className="input" value={form.stock} onChange={set('stock')} /></Field>
               <Field label="Low-stock alert"><input readOnly className="input bg-slate-100 dark:bg-slate-800" value="Less than 5 items" /></Field>
