@@ -170,6 +170,11 @@ export default function Catalog() {
   const view = sp.get('view') || 'grid';
   const visibleCats = mainCategoriesOnly(cats);
   const allCats = flattenCategories(visibleCats);
+  const selectedMain = visibleCats.find((c) =>
+    String(c.id) === category ||
+    c.name === category ||
+    (c.children || []).some((child) => String(child.id) === category || child.name === category)
+  );
 
   useEffect(() => { api('/categories').then(setCats).catch(() => {}); }, []);
   useEffect(() => {
@@ -227,9 +232,9 @@ export default function Catalog() {
               const visual = getCategoryVisual(c.name);
               const categoryIds = [c.id, ...(c.children || []).map((child) => child.id)].map(String);
               const count = !q && !category && products ? products.filter((p) => categoryIds.includes(String(p.categoryId ?? p.category?.id))).length : null;
-              const active = String(c.id) === category;
+              const active = String(c.id) === category || c.name === category || (c.children || []).some((child) => String(child.id) === category || child.name === category);
               return (
-                <Link key={c.id || c.name} to={`/catalog?category=${encodeURIComponent(c.name)}`} className={`category-feature group relative h-52 overflow-hidden rounded-2xl ${active ? 'ring-2 ring-brand ring-offset-2' : ''}`}>
+                <button type="button" key={c.id || c.name} onClick={() => set('category', c.name)} className={`category-feature group relative h-52 w-full text-left ${active ? 'ring-2 ring-brand ring-offset-2' : ''}`}>
                   <img src={visual.image} alt={c.name} loading="lazy" className="absolute inset-0 h-full w-full object-cover transition duration-700 group-hover:scale-110" />
                   <div className="absolute inset-0 bg-gradient-to-t from-[#102f2c]/95 via-[#102f2c]/25 to-transparent" />
                   <div className="absolute inset-x-0 bottom-0 p-5 text-white">
@@ -239,10 +244,34 @@ export default function Catalog() {
                     <p className="mt-3 text-xs font-bold text-[#b9f0dc]">{count === null ? 'Browse collection' : `${count} ${count === 1 ? 'product' : 'products'}`} <span className="ml-1 transition group-hover:ml-2">→</span></p>
                     {c.children?.length > 0 && <p className="mt-1 text-[11px] text-white/60">{c.children.map((child) => child.name).join(' · ')}</p>}
                   </div>
-                </Link>
+                </button>
               );
             })}
           </div>
+          {selectedMain && (
+            <div className="mt-4 rounded-2xl border border-[#d6ebe6] bg-[#f0faf7] p-4 dark:border-slate-700 dark:bg-slate-800">
+              <div className="flex flex-wrap items-center justify-between gap-3">
+                <div>
+                  <p className="text-[11px] font-bold uppercase tracking-wider text-brand">Explore {selectedMain.name}</p>
+                  <p className="mt-1 text-sm text-slate-500">Choose a subcategory to narrow the products below.</p>
+                </div>
+                <button type="button" onClick={() => set('category', selectedMain.name)} className={chip(category === String(selectedMain.id) || category === selectedMain.name)}>
+                  All {selectedMain.name}
+                </button>
+              </div>
+              {selectedMain.children?.length > 0 ? (
+                <div className="mt-3 flex flex-wrap gap-2">
+                  {selectedMain.children.map((child) => (
+                    <button key={child.id} type="button" onClick={() => set('category', String(child.id))} className={chip(category === String(child.id) || category === child.name)}>
+                      ↳ {child.name}
+                    </button>
+                  ))}
+                </div>
+              ) : (
+                <p className="mt-3 text-sm font-semibold text-amber-700">No subcategories have been added to this category yet.</p>
+              )}
+            </div>
+          )}
         </section>
       )}
 
