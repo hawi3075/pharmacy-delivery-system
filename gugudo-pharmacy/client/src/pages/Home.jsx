@@ -278,11 +278,11 @@ export default function Home() {
         </section>
       </Reveal>
 
-      <footer className="grid gap-8 border-t border-[#e5e4dc] py-10 dark:border-slate-700 md:grid-cols-4">
-        <div><Link to="/" className="text-2xl font-bold text-[#207065]" style={{ fontFamily: "'DM Serif Display', serif" }}>Gugudo</Link><p className="mt-3 text-sm leading-6 text-slate-500">Safe, reliable pharmaceutical and medical equipment supply for a healthier Southern Ethiopia.</p></div>
-        <div><h3 className="text-lg">Products</h3><div className="mt-3 grid gap-2 text-sm text-slate-500"><Link to="/catalog">Browse products</Link><Link to="/about">Our services</Link></div></div>
-        <div><h3 className="text-lg">Partner with us</h3><div className="mt-3 grid gap-2 text-sm text-slate-500"><Link to="/contact">Request a quotation</Link><Link to="/contact">Institutional supply</Link></div></div>
-        <div><h3 className="text-lg">Contact Gugudo</h3><div className="mt-3 grid gap-2 text-sm text-slate-500"><a href="mailto:gugudopharma27@gmail.com">gugudopharma27@gmail.com</a><a href="tel:+251916853543">WhatsApp: 0916 853 543</a><a href="https://t.me/0950477994" target="_blank" rel="noreferrer">Telegram: 0950 477 994</a></div></div>
+      <footer className="grid gap-8 rounded-[2rem] bg-[#173f3b] px-7 py-10 text-white md:grid-cols-4 md:px-14">
+        <div><Link to="/" className="text-2xl font-bold text-[#b9f0dc]" style={{ fontFamily: "'DM Serif Display', serif" }}>Gugudo</Link><p className="mt-3 text-sm leading-6 text-white/70">Safe, reliable pharmaceutical and medical equipment supply for a healthier Southern Ethiopia.</p></div>
+        <div><h3 className="text-lg">Products</h3><div className="mt-3 grid gap-2 text-sm text-white/70"><Link to="/catalog">Browse products</Link><Link to="/about">Our services</Link></div></div>
+        <div><h3 className="text-lg">Partner with us</h3><div className="mt-3 grid gap-2 text-sm text-white/70"><Link to="/contact">Request a quotation</Link><Link to="/contact">Institutional supply</Link></div></div>
+        <div><h3 className="text-lg">Contact Gugudo</h3><div className="mt-3 grid gap-2 text-sm text-white/70"><a href="mailto:gugudopharma27@gmail.com">gugudopharma27@gmail.com</a><a href="tel:+251916853543">WhatsApp: 0916 853 543</a><a href="https://t.me/0950477994" target="_blank" rel="noreferrer">Telegram: 0950 477 994</a></div></div>
       </footer>
     </div>
   );
